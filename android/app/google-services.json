@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "912374552255",
+    "project_id": "diabary",
+    "storage_bucket": "diabary.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:912374552255:android:15169dd4170201b16a980a",
+        "android_client_info": {
+          "package_name": "com.example.diabary"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkNhpKEpGrSdnuVaR2k8TbmgGC2okZs3c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
