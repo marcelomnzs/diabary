@@ -1,6 +1,9 @@
 import 'package:diabary/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:diabary/login/login.view.dart';
+// import 'package:diabary/cadastro/cadastro.view.dart';
+// import 'package:diabary/home/home.view.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,7 +19,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Scaffold(body: Center(child: Text('Hello World!'))),
+      home: LoginView(),
     );
   }
 }
