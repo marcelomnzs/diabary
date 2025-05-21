@@ -277,11 +277,10 @@ class _CadastroViewState extends State<CadastroView> {
 
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.push(
+                      Navigator.pushNamed(
                         context,
-                        MaterialPageRoute(builder: (context) => LoginView()),
-                      );
-                      // Handle login action
+                        '/home',
+                      ); // Navega para a tela de login
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color.fromRGBO(57, 55, 21, 100),
