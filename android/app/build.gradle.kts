@@ -11,7 +11,7 @@ plugins {
 android {
     namespace = "com.example.diabary"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    ndkVersion = "ndk;29.0.13113456 "
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11

@@ -42,6 +42,8 @@ class MedicamentoLembrete {
 }
 
 class MedicamentosView extends StatefulWidget {
+  const MedicamentosView({super.key});
+
   @override
   State<MedicamentosView> createState() => _MedicamentosViewState();
 }
@@ -195,7 +197,7 @@ class _MedicamentosViewState extends State<MedicamentosView> {
   Widget build(BuildContext context) {
     final key = _formatDate(_selectedDay);
     final lembretesDoDia = _lembretes[key] ?? [];
-    int _selectedIndex = 0;
+    int selectedIndex = 0;
 
     return Scaffold(
       appBar: AppBar(
@@ -359,12 +361,12 @@ class _MedicamentosViewState extends State<MedicamentosView> {
           ),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Sobre'),
         ],
-        currentIndex: _selectedIndex, // Define o índice selecionado
+        currentIndex: selectedIndex, // Define o índice selecionado
         selectedItemColor: Colors.blue, // Cor do item selecionado
         unselectedItemColor: Colors.grey, // Cor dos itens não selecionados
         onTap: (int index) {
           setState(() {
-            _selectedIndex = index; // Atualiza o índice selecionado
+            selectedIndex = index; // Atualiza o índice selecionado
           });
         },
       ),
@@ -405,7 +407,7 @@ class _DialogNovoLembreteState extends State<_DialogNovoLembrete> {
               children: [
                 const Text('Horário:'),
                 const SizedBox(width: 8),
-                Text('${_horario.format(context)}'),
+                Text(_horario.format(context)),
                 IconButton(
                   icon: const Icon(Icons.access_time),
                   onPressed: () async {
