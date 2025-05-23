@@ -3,7 +3,7 @@ import 'package:diabary/chatbot/api.key.dart';
 import 'package:http/http.dart' as http;
 
 Future<String> getOpenRouterResponse(String pergunta) async {
-  const endpoint = 'https://api.openrouter.ai/v1/chat/completions';
+  const endpoint = 'https://api.groq.com/openai/v1/chat/completions';
 
   final headers = {
     'Authorization': 'Bearer $GROQ_API_KEY',
