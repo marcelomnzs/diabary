@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'profile_screen.dart';
-import 'change_password_screen.dart';
-import 'edit_account_screen.dart';
+import 'perfil.view.dart';
+import 'senha.view.dart';
+import 'conta.view.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({Key? key}) : super(key: key);
