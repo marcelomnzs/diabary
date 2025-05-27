@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:diabary/chatbot/api.key.dart';
+import 'package:diabary/features/chatbot/api.key.dart';
 import 'package:http/http.dart' as http;
 
 Future<String> getOpenRouterResponse(String pergunta) async {

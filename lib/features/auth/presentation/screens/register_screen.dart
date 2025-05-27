@@ -1,37 +1,40 @@
+import 'package:diabary/features/auth/presentation/screens/login_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:diabary/cadastro/cadastro.view.dart';
 
-class LoginView extends StatefulWidget {
-  const LoginView({super.key});
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
 
   @override
-  State<LoginView> createState() => _LoginViewState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginViewState extends State<LoginView> {
+class _RegisterScreenState extends State<RegisterScreen> {
   bool _isPasswordVisible = false;
-
+  bool _isPasswordVisible2 = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        title: const Text(''),
+        backgroundColor: const Color.fromARGB(156, 255, 255, 255),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pushNamed(
+            Navigator.push(
               context,
-              '/cadastro',
-            ); // Navega para a tela de cadastro
+              MaterialPageRoute(builder: (context) => LoginScreen()),
+            );
           },
         ),
       ),
+
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              SizedBox(height: 100),
+              SizedBox(height: 50),
 
               Center(
                 child: ClipRRect(
@@ -39,14 +42,29 @@ class _LoginViewState extends State<LoginView> {
                   child: SizedBox(
                     width: 150,
                     height: 150,
-                    child: Image(image: AssetImage('imagens/playstore.png')),
+                    child: Image(image: AssetImage('imagens/bombardilo.jpg')),
                   ),
                 ),
               ),
 
+              SizedBox(height: 20),
+
               Padding(
-                padding: const EdgeInsets.all(50.0),
-                child: const TextField(
+                padding: const EdgeInsets.symmetric(horizontal: 50.0),
+                child: TextField(
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Digite Seu Nome',
+                    labelText: 'Nome',
+                  ),
+                ),
+              ),
+
+              SizedBox(height: 10),
+
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 50.0),
+                child: TextField(
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: 'Informe seu email',
@@ -55,7 +73,7 @@ class _LoginViewState extends State<LoginView> {
                 ),
               ),
 
-              SizedBox(height: 0),
+              SizedBox(height: 10),
 
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 50.0),
@@ -63,7 +81,7 @@ class _LoginViewState extends State<LoginView> {
                   obscureText: !_isPasswordVisible,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    hintText: 'Informe sua senha',
+                    hintText: 'Digite sua senha',
                     labelText: 'Senha',
                     suffixIcon: IconButton(
                       icon: Icon(
@@ -77,6 +95,45 @@ class _LoginViewState extends State<LoginView> {
                         });
                       },
                     ),
+                  ),
+                ),
+              ),
+
+              SizedBox(height: 10),
+
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 50.0),
+                child: TextField(
+                  obscureText: !_isPasswordVisible2,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Senha',
+                    labelText: 'Confirme sua senha',
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isPasswordVisible2
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isPasswordVisible2 = !_isPasswordVisible2;
+                        });
+                      },
+                    ),
+                  ),
+                ),
+              ),
+
+              SizedBox(height: 10),
+
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 50.0),
+                child: TextField(
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Número de Telefone',
+                    labelText: 'Informe seu Número de Telefone',
                   ),
                 ),
               ),
@@ -100,7 +157,7 @@ class _LoginViewState extends State<LoginView> {
                     ),
 
                     Text(
-                      'Faça o seu login com',
+                      'Ou cadastre-se com',
                       style: TextStyle(
                         fontFamily: 'SourceSans3',
                         fontSize: 15,
@@ -220,10 +277,10 @@ class _LoginViewState extends State<LoginView> {
 
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.push(
+                      Navigator.pushNamed(
                         context,
-                        MaterialPageRoute(builder: (context) => CadastroView()),
-                      );
+                        '/home',
+                      ); // Navega para a tela de login
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color.fromRGBO(57, 55, 21, 100),
@@ -232,7 +289,7 @@ class _LoginViewState extends State<LoginView> {
                       ),
                     ),
                     child: const Text(
-                      'Cadastre-se',
+                      'Cadastrar',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,

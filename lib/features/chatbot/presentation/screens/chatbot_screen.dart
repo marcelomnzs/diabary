@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'pegar_rota.dart';
+import '../../pegar_rota.dart';
 
-class ChatbotView extends StatefulWidget {
-  const ChatbotView({super.key});
+class ChatbotScreen extends StatefulWidget {
+  const ChatbotScreen({super.key});
 
   @override
-  State<ChatbotView> createState() => _ChatbotViewState();
+  State<ChatbotScreen> createState() => _ChatbotScreenState();
 }
 
-class _ChatbotViewState extends State<ChatbotView> {
+class _ChatbotScreenState extends State<ChatbotScreen> {
   final TextEditingController controller = TextEditingController();
   final List<Map<String, String>> messages =
       []; // {'role': 'user'/'bot', 'text': ...}

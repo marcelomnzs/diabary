@@ -1,10 +1,10 @@
+import 'package:diabary/features/auth/presentation/screens/login_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:diabary/login/login.view.dart';
-import 'package:diabary/cadastro/cadastro.view.dart';
-import 'package:diabary/home/home.view.dart';
-import 'package:diabary/lembrete_medicamentos/medicamentos.view.dart';
+import 'package:diabary/features/auth/presentation/screens/register_screen.dart';
+import 'package:diabary/features/home/presentation/screens/home_screen.dart';
+import 'package:diabary/features/medications/presentation/screens/medications_screen.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:diabary/chatbot/chatbot.view.dart';
+import 'package:diabary/features/chatbot/presentation/screens/chatbot_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,11 +19,11 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: '/chatbot',
       routes: {
-        '/login': (context) => LoginView(),
-        '/cadastro': (context) => CadastroView(),
+        '/login': (context) => LoginScreen(),
+        '/cadastro': (context) => RegisterScreen(),
         '/home': (context) => HomeView(),
-        '/medicamentos': (context) => MedicamentosView(),
-        '/chatbot': (context) => ChatbotView(),
+        '/medicamentos': (context) => MedicationsScreen(),
+        '/chatbot': (context) => ChatbotScreen(),
       },
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,

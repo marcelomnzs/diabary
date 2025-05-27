@@ -5,7 +5,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'dart:convert';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
-import 'package:diabary/home/home.view.dart';
+import 'package:diabary/features/home/presentation/screens/home_screen.dart';
 
 class MedicamentoLembrete {
   final String nome;
@@ -41,14 +41,14 @@ class MedicamentoLembrete {
   }
 }
 
-class MedicamentosView extends StatefulWidget {
-  const MedicamentosView({super.key});
+class MedicationsScreen extends StatefulWidget {
+  const MedicationsScreen({super.key});
 
   @override
-  State<MedicamentosView> createState() => _MedicamentosViewState();
+  State<MedicationsScreen> createState() => _MedicationsScreenState();
 }
 
-class _MedicamentosViewState extends State<MedicamentosView> {
+class _MedicationsScreenState extends State<MedicationsScreen> {
   DateTime _focusedDay = DateTime.now();
   DateTime _selectedDay = DateTime.now();
   Map<String, List<MedicamentoLembrete>> _lembretes = {};

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class MealBuilderScreen extends StatefulWidget {
-  const MealBuilderScreen({Key? key}) : super(key: key);
+class MealTrackerScreen extends StatefulWidget {
+  const MealTrackerScreen({super.key});
 
   @override
-  State<MealBuilderScreen> createState() => _MealBuilderScreenState();
+  State<MealTrackerScreen> createState() => _MealTrackerScreenState();
 }
 
-class _MealBuilderScreenState extends State<MealBuilderScreen> {
+class _MealTrackerScreenState extends State<MealTrackerScreen> {
   final TextEditingController _searchController = TextEditingController();
   final Map<String, List<String>> _addedItems = {
     'Café da Manhã': [],

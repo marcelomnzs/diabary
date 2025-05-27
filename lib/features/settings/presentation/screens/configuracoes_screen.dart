@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'perfil.view.dart';
-import 'senha.view.dart';
-import 'conta.view.dart';
+import 'profile_screen.dart';
+import 'change_password_screen.dart';
+import 'account_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({Key? key}) : super(key: key);
+  const SettingsScreen({super.key});
 
   // Método para criar um item da lista com ícone, texto e ação
   Widget _buildSettingsOption({

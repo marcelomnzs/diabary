@@ -1,40 +1,32 @@
+import 'package:diabary/features/auth/presentation/screens/register_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:diabary/login/login.view.dart';
 
-class CadastroView extends StatefulWidget {
-  const CadastroView({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  State<CadastroView> createState() => _CadastroViewState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _CadastroViewState extends State<CadastroView> {
+class _LoginScreenState extends State<LoginScreen> {
   bool _isPasswordVisible = false;
-  bool _isPasswordVisible2 = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text(''),
-        backgroundColor: const Color.fromARGB(156, 255, 255, 255),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => LoginView()),
-            );
-          },
+          onPressed: () {},
         ),
       ),
-
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              SizedBox(height: 50),
+              SizedBox(height: 100),
 
               Center(
                 child: ClipRRect(
@@ -42,29 +34,14 @@ class _CadastroViewState extends State<CadastroView> {
                   child: SizedBox(
                     width: 150,
                     height: 150,
-                    child: Image(image: AssetImage('imagens/bombardilo.jpg')),
+                    child: Image(image: AssetImage('imagens/playstore.png')),
                   ),
                 ),
               ),
 
-              SizedBox(height: 20),
-
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 50.0),
-                child: TextField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Digite Seu Nome',
-                    labelText: 'Nome',
-                  ),
-                ),
-              ),
-
-              SizedBox(height: 10),
-
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 50.0),
-                child: TextField(
+                padding: const EdgeInsets.all(50.0),
+                child: const TextField(
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: 'Informe seu email',
@@ -73,7 +50,7 @@ class _CadastroViewState extends State<CadastroView> {
                 ),
               ),
 
-              SizedBox(height: 10),
+              SizedBox(height: 0),
 
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 50.0),
@@ -81,7 +58,7 @@ class _CadastroViewState extends State<CadastroView> {
                   obscureText: !_isPasswordVisible,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    hintText: 'Digite sua senha',
+                    hintText: 'Informe sua senha',
                     labelText: 'Senha',
                     suffixIcon: IconButton(
                       icon: Icon(
@@ -95,45 +72,6 @@ class _CadastroViewState extends State<CadastroView> {
                         });
                       },
                     ),
-                  ),
-                ),
-              ),
-
-              SizedBox(height: 10),
-
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 50.0),
-                child: TextField(
-                  obscureText: !_isPasswordVisible2,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Senha',
-                    labelText: 'Confirme sua senha',
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _isPasswordVisible2
-                            ? Icons.visibility
-                            : Icons.visibility_off,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _isPasswordVisible2 = !_isPasswordVisible2;
-                        });
-                      },
-                    ),
-                  ),
-                ),
-              ),
-
-              SizedBox(height: 10),
-
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 50.0),
-                child: TextField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Número de Telefone',
-                    labelText: 'Informe seu Número de Telefone',
                   ),
                 ),
               ),
@@ -157,7 +95,7 @@ class _CadastroViewState extends State<CadastroView> {
                     ),
 
                     Text(
-                      'Ou cadastre-se com',
+                      'Faça o seu login com',
                       style: TextStyle(
                         fontFamily: 'SourceSans3',
                         fontSize: 15,
@@ -277,10 +215,12 @@ class _CadastroViewState extends State<CadastroView> {
 
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.pushNamed(
+                      Navigator.push(
                         context,
-                        '/home',
-                      ); // Navega para a tela de login
+                        MaterialPageRoute(
+                          builder: (context) => RegisterScreen(),
+                        ),
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color.fromRGBO(57, 55, 21, 100),
@@ -289,7 +229,7 @@ class _CadastroViewState extends State<CadastroView> {
                       ),
                     ),
                     child: const Text(
-                      'Cadastrar',
+                      'Cadastre-se',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,

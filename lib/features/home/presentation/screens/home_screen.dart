@@ -1,5 +1,5 @@
+import 'package:diabary/features/medications/presentation/screens/medications_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:diabary/lembrete_medicamentos/medicamentos.view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -430,7 +430,7 @@ class _HomeViewState extends State<HomeView> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => MedicamentosView(),
+                          builder: (context) => MedicationsScreen(),
                         ),
                       );
                     },
