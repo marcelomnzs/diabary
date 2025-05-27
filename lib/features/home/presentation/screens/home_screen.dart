@@ -1,14 +1,15 @@
-import 'package:diabary/features/medications/presentation/screens/medications_screen.dart';
+import 'package:diabary/core/routes/app_router.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-class HomeView extends StatefulWidget {
-  const HomeView({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
   @override
-  State<HomeView> createState() => _HomeViewState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeViewState extends State<HomeView> {
+class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0; // Índice do botão selecionado
 
   @override
@@ -123,9 +124,9 @@ class _HomeViewState extends State<HomeView> {
                           ),
                           child: InkWell(
                             borderRadius: BorderRadius.circular(10),
-                            onTap: () {
-                              // ação ao clicar
-                            },
+                            onTap:
+                                () =>
+                                    context.goNamed(AppRoutes.mealTracker.name),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(10),
                               child: Image.asset(
@@ -199,7 +200,9 @@ class _HomeViewState extends State<HomeView> {
                             color: Color.fromRGBO(57, 55, 21, 100),
                           ),
                           child: IconButton(
-                            onPressed: () {},
+                            onPressed:
+                                () =>
+                                    context.goNamed(AppRoutes.medications.name),
                             icon: Icon(
                               Icons.food_bank,
                               color: Color.fromRGBO(255, 255, 255, 1),
@@ -426,14 +429,8 @@ class _HomeViewState extends State<HomeView> {
                   ),
                   IconButton(
                     icon: Icon(Icons.chevron_right),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => MedicationsScreen(),
-                        ),
-                      );
-                    },
+                    onPressed:
+                        () => context.goNamed(AppRoutes.medications.name),
                   ),
                 ],
               ),

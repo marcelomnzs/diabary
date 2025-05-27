@@ -1,11 +1,12 @@
+import 'package:diabary/core/routes/app_router.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'dart:convert';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
-import 'package:diabary/features/home/presentation/screens/home_screen.dart';
 
 class MedicamentoLembrete {
   final String nome;
@@ -212,12 +213,7 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
             Icons.arrow_back,
             color: Color.fromARGB(255, 255, 255, 255),
           ),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => HomeView()),
-            );
-          },
+          onPressed: () => context.goNamed(AppRoutes.home.name),
         ),
         backgroundColor: const Color.fromRGBO(138, 136, 82, 10),
       ),

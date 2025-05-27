@@ -1,4 +1,6 @@
+import 'package:diabary/core/routes/app_router.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class MealTrackerScreen extends StatefulWidget {
   const MealTrackerScreen({super.key});
@@ -46,7 +48,7 @@ class _MealTrackerScreenState extends State<MealTrackerScreen> {
                 children: [
                   IconButton(
                     icon: const Icon(Icons.arrow_back),
-                    onPressed: () {}, // Conexão futura com a tela Home
+                    onPressed: () => context.goNamed(AppRoutes.home.name),
                   ),
                   const Expanded(
                     child: Center(

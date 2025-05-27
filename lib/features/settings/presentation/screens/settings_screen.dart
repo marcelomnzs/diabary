@@ -1,7 +1,6 @@
+import 'package:diabary/core/routes/app_router.dart';
 import 'package:flutter/material.dart';
-import 'profile_screen.dart';
-import 'change_password_screen.dart';
-import 'account_screen.dart';
+import 'package:go_router/go_router.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -58,14 +57,7 @@ class SettingsScreen extends StatelessWidget {
             child: Column(
               children: [
                 GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const ProfileScreen(),
-                      ), // Vou supor que a tela se chama ProfileScreen
-                    );
-                  },
+                  onTap: () => context.goNamed(AppRoutes.profilePage.name),
                   child: CircleAvatar(
                     radius: 35,
                     backgroundColor: Colors.grey[300],
@@ -94,28 +86,14 @@ class SettingsScreen extends StatelessWidget {
           _buildSettingsOption(
             icon: Icons.lock_outline,
             title: 'Mudar Senha',
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const ChangePasswordScreen(),
-                ),
-              );
-            },
+            onTap: () => context.goNamed(AppRoutes.changePassword.name),
           ),
           const Divider(),
 
           _buildSettingsOption(
             icon: Icons.person_outline,
             title: 'Editar Conta',
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const EditAccountScreen(),
-                ),
-              );
-            },
+            onTap: () => context.goNamed(AppRoutes.editAccount.name),
           ),
           const Divider(),
 

@@ -1,5 +1,6 @@
-import 'package:diabary/features/auth/presentation/screens/login_screen.dart';
+import 'package:diabary/core/routes/app_router.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -20,12 +21,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         backgroundColor: const Color.fromARGB(156, 255, 255, 255),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => LoginScreen()),
-            );
-          },
+          onPressed: () => context.goNamed(AppRoutes.login.name),
         ),
       ),
 
@@ -276,12 +272,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   height: 35,
 
                   child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushNamed(
-                        context,
-                        '/home',
-                      ); // Navega para a tela de login
-                    },
+                    onPressed: () {},
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color.fromRGBO(57, 55, 21, 100),
                       shape: RoundedRectangleBorder(
@@ -297,6 +288,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ),
                   ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(bottom: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Já possui conta?',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(width: 4),
+                    GestureDetector(
+                      onTap: () => context.goNamed(AppRoutes.login.name),
+                      child: Text(
+                        'Login',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blueAccent,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
