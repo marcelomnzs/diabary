@@ -351,6 +351,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
 
     if (authProvider.user != null && authProvider.error == null) {
+      await authProvider.updateUsername(_nameController.text);
+
       if (context.mounted) {
         context.goNamed(AppRoutes.home.name);
       }

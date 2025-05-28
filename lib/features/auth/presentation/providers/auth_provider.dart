@@ -79,6 +79,8 @@ class AuthProvider with ChangeNotifier {
     try {
       _setLoading(true);
       await _authService.updateUsername(username: username);
+      await _authService.currentUser?.reload(); // <-- Força recarregar os dados
+      _user = _authService.currentUser;
     } on FirebaseAuthException catch (exception) {
       _error = _parseFirebaseError(exception.code);
     } finally {
