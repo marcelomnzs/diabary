@@ -1,3 +1,4 @@
+import 'package:diabary/features/auth/presentation/providers/auth_provider.dart';
 import 'package:diabary/features/auth/presentation/screens/login_screen.dart';
 import 'package:diabary/features/auth/presentation/screens/register_screen.dart';
 import 'package:diabary/features/chatbot/presentation/screens/chatbot_screen.dart';
@@ -24,9 +25,29 @@ enum AppRoutes {
   editAccount,
 }
 
-GoRouter createRouter() {
+bool _isPublicRoute(String route) {
+  const publicRoutes = {'/login', '/signup'};
+  return publicRoutes.contains(route);
+}
+
+GoRouter createRouter(AuthProvider authProvider) {
   return GoRouter(
     initialLocation: '/login',
+    refreshListenable: authProvider,
+    redirect: (context, state) {
+      final isLoggedIn = authProvider.isAuthenticated;
+      final currentRoute = state.uri.path;
+
+      if (!isLoggedIn && !_isPublicRoute(currentRoute)) {
+        return '/login';
+      }
+
+      if (isLoggedIn && _isPublicRoute(currentRoute)) {
+        return '/home';
+      }
+
+      return null;
+    },
 
     routes: [
       GoRoute(

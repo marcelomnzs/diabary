@@ -58,7 +58,7 @@ class SettingsScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  '${authProvider.user!.displayName}',
+                  authProvider.user?.displayName ?? 'Usuário',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,

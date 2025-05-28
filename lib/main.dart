@@ -27,7 +27,8 @@ class MainApp extends StatelessWidget {
       ],
       child: Builder(
         builder: (context) {
-          final router = createRouter();
+          final authProvider = context.read<AuthProvider>();
+          final router = createRouter(authProvider);
 
           return MaterialApp.router(
             debugShowCheckedModeBanner: false,
