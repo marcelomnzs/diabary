@@ -1,6 +1,8 @@
 import 'package:diabary/core/routes/app_router.dart';
+import 'package:diabary/features/auth/presentation/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -11,9 +13,13 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool _isPasswordVisible = false;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = context.watch<AuthProvider>();
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -36,8 +42,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
               Padding(
                 padding: const EdgeInsets.all(50.0),
-                child: const TextField(
-                  decoration: InputDecoration(
+                child: TextField(
+                  controller: _emailController,
+                  decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: 'Informe seu email',
                     labelText: 'Email',
@@ -50,6 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 50.0),
                 child: TextField(
+                  controller: _passwordController,
                   obscureText: !_isPasswordVisible,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
@@ -209,7 +217,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 35,
 
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      _handleLogin(authProvider, context);
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color.fromRGBO(57, 55, 21, 100),
                       shape: RoundedRectangleBorder(
@@ -256,5 +266,16 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  void _handleLogin(AuthProvider authProvider, BuildContext context) async {
+    await authProvider.signIn(_emailController.text, _passwordController.text);
+
+    if (authProvider.user != null && authProvider.error == null) {
+      if (context.mounted) {
+        context.goNamed(AppRoutes.home.name);
+      }
+    }
+    authProvider.setError(null);
   }
 }

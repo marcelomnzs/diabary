@@ -1,6 +1,8 @@
 import 'package:diabary/core/routes/app_router.dart';
+import 'package:diabary/features/auth/presentation/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -21,34 +23,20 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = context.watch<AuthProvider>();
     return Scaffold(
       backgroundColor: Colors.white,
       // AppBar personalizada com cor de fundo verde oliva
       appBar: AppBar(
         backgroundColor: const Color(0xFF7A754E),
+        foregroundColor: Colors.white,
         elevation: 0,
-        automaticallyImplyLeading: false,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Expanded(
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Icon(Icons.arrow_back, color: Colors.white), // sem ação
-              ),
-            ),
-            const Text(
-              'Configuração',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const Expanded(child: SizedBox()), // espaço direito
-          ],
+        centerTitle: true,
+        title: const Text(
+          'Configurações',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
-
       body: Column(
         children: [
           // Seção do usuário
@@ -70,7 +58,7 @@ class SettingsScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  'Ricardo',
+                  '${authProvider.user!.displayName}',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -118,9 +106,7 @@ class SettingsScreen extends StatelessWidget {
           _buildSettingsOption(
             icon: Icons.logout,
             title: 'Logout',
-            onTap: () {
-              print('Logout');
-            },
+            onTap: () => authProvider.signOut(),
           ),
         ],
       ),

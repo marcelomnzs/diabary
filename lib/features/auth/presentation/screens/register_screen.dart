@@ -1,6 +1,8 @@
 import 'package:diabary/core/routes/app_router.dart';
+import 'package:diabary/features/auth/presentation/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -12,8 +14,17 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   bool _isPasswordVisible = false;
   bool _isPasswordVisible2 = false;
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+    final authProvider = context.watch<AuthProvider>();
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -48,6 +59,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 50.0),
                 child: TextField(
+                  controller: _nameController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: 'Digite Seu Nome',
@@ -61,6 +73,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 50.0),
                 child: TextField(
+                  controller: _emailController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: 'Informe seu email',
@@ -74,6 +87,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 50.0),
                 child: TextField(
+                  controller: _passwordController,
                   obscureText: !_isPasswordVisible,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
@@ -100,6 +114,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 50.0),
                 child: TextField(
+                  controller: _confirmPasswordController,
                   obscureText: !_isPasswordVisible2,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
@@ -126,6 +141,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 50.0),
                 child: TextField(
+                  controller: _phoneController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: 'Número de Telefone',
@@ -272,7 +288,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   height: 35,
 
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () => _handleSignUp(authProvider, context),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color.fromRGBO(57, 55, 21, 100),
                       shape: RoundedRectangleBorder(
@@ -318,5 +334,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _handleSignUp(
+    AuthProvider authProvider,
+    BuildContext context,
+  ) async {
+    if (_passwordController.text != _confirmPasswordController.text) {
+      authProvider.setError('As senhas não coincidem');
+      return;
+    }
+
+    await authProvider.createAccount(
+      _emailController.text,
+      _passwordController.text,
+    );
+
+    if (authProvider.user != null && authProvider.error == null) {
+      if (context.mounted) {
+        context.goNamed(AppRoutes.home.name);
+      }
+    }
   }
 }

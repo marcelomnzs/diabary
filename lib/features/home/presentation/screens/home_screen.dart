@@ -1,6 +1,8 @@
 import 'package:diabary/core/routes/app_router.dart';
+import 'package:diabary/features/auth/presentation/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,6 +16,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = context.watch<AuthProvider>();
+
     return Scaffold(
       backgroundColor: Color(0xFFE5E1D9),
       body: SafeArea(
@@ -33,13 +37,16 @@ class _HomeScreenState extends State<HomeScreen> {
                         left: 8.0,
                         top: 8.0,
                       ), // Espaçamento apenas à esquerda e no topo
-                      child: Text(
-                        'Olá, Usuário',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      child:
+                          authProvider.user != null
+                              ? Text('Olá, ${authProvider.user!.displayName}')
+                              : Text(
+                                'Olá, Usuário',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                     ),
 
                     Padding(
@@ -91,9 +98,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
 
                           child: IconButton(
-                            onPressed: () {
-                              // Ação ao pressionar o botão
-                            },
+                            onPressed:
+                                () =>
+                                    context.pushNamed(AppRoutes.settings.name),
                             icon: Icon(Icons.settings, color: Colors.white),
                             iconSize: 20.0,
                           ),
@@ -125,8 +132,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: InkWell(
                             borderRadius: BorderRadius.circular(10),
                             onTap:
-                                () =>
-                                    context.goNamed(AppRoutes.mealTracker.name),
+                                () => context.pushNamed(
+                                  AppRoutes.mealTracker.name,
+                                ),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(10),
                               child: Image.asset(
