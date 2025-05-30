@@ -19,7 +19,6 @@ class _HomeScreenState extends State<HomeScreen> {
     final authProvider = context.watch<AuthProvider>();
 
     return Scaffold(
-      backgroundColor: Color(0xFFE5E1D9),
       body: SafeArea(
         child: Column(
           children: [
@@ -74,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            color: Color.fromRGBO(57, 55, 21, 10),
+                            color: Theme.of(context).colorScheme.primary,
                           ),
 
                           child: IconButton(
@@ -83,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             },
                             icon: Icon(
                               Icons.notifications,
-                              color: Colors.white,
+                              color: Theme.of(context).colorScheme.onPrimary,
                             ),
                             iconSize: 20.0,
                           ),
@@ -94,14 +93,17 @@ class _HomeScreenState extends State<HomeScreen> {
                         Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            color: Color.fromRGBO(57, 55, 21, 10),
+                            color: Theme.of(context).colorScheme.primary,
                           ),
 
                           child: IconButton(
                             onPressed:
                                 () =>
                                     context.pushNamed(AppRoutes.settings.name),
-                            icon: Icon(Icons.settings, color: Colors.white),
+                            icon: Icon(
+                              Icons.settings,
+                              color: Theme.of(context).colorScheme.onPrimary,
+                            ),
                             iconSize: 20.0,
                           ),
                         ),
@@ -127,7 +129,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           width: 83,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            color: Color.fromRGBO(57, 55, 21, 100),
+                            color: Theme.of(context).colorScheme.surfaceTint,
                           ),
                           child: InkWell(
                             borderRadius: BorderRadius.circular(10),
@@ -147,12 +149,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         Text(
                           'Monte seu prato',
                           style: TextStyle(
-                            color: const Color.fromARGB(
-                              255,
-                              0,
-                              0,
-                              0,
-                            ), // Cor de destaque para o valor promocional
+                            color: Theme.of(context).colorScheme.onSurface,
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
                           ),
@@ -169,13 +166,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           width: 83,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            color: Color.fromRGBO(57, 55, 21, 100),
+                            color: Theme.of(context).colorScheme.surfaceTint,
                           ),
                           child: IconButton(
                             onPressed: () {},
                             icon: Icon(
                               Icons.food_bank,
-                              color: Color.fromRGBO(255, 255, 255, 1),
+                              color: Theme.of(context).colorScheme.surface,
                             ),
                             iconSize: 20.0,
                           ),
@@ -183,12 +180,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         Text(
                           'Minhas métricas',
                           style: TextStyle(
-                            color: const Color.fromARGB(
-                              255,
-                              0,
-                              0,
-                              0,
-                            ), // Cor de destaque para o valor promocional
+                            color:
+                                Theme.of(context)
+                                    .colorScheme
+                                    .onSurface, // Cor de destaque para o valor promocional
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
                           ),
@@ -205,7 +200,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           width: 83,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            color: Color.fromRGBO(57, 55, 21, 100),
+                            color: Theme.of(context).colorScheme.surfaceTint,
                           ),
                           child: IconButton(
                             onPressed:
@@ -213,7 +208,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     context.goNamed(AppRoutes.medications.name),
                             icon: Icon(
                               Icons.food_bank,
-                              color: Color.fromRGBO(255, 255, 255, 1),
+                              color: Theme.of(context).colorScheme.surface,
                             ),
                             iconSize: 20.0,
                           ),
@@ -221,12 +216,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         Text(
                           'Medicamentos',
                           style: TextStyle(
-                            color: const Color.fromARGB(
-                              255,
-                              0,
-                              0,
-                              0,
-                            ), // Cor de destaque para o valor promocional
+                            color:
+                                Theme.of(context)
+                                    .colorScheme
+                                    .onSurface, // Cor de destaque para o valor promocional
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
                           ),
@@ -243,13 +236,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           width: 83,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            color: Color.fromRGBO(57, 55, 21, 100),
+                            color: Theme.of(context).colorScheme.surfaceTint,
                           ),
                           child: IconButton(
                             onPressed: () {},
                             icon: Icon(
                               Icons.food_bank,
-                              color: Color.fromRGBO(255, 255, 255, 1),
+                              color: Theme.of(context).colorScheme.surface,
                             ),
                             iconSize: 20.0,
                           ),
@@ -257,12 +250,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         Text(
                           'Meu perfil ???',
                           style: TextStyle(
-                            color: const Color.fromARGB(
-                              255,
-                              0,
-                              0,
-                              0,
-                            ), // Cor de destaque para o valor promocional
+                            color:
+                                Theme.of(context)
+                                    .colorScheme
+                                    .onSurface, // Cor de destaque para o valor promocional
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
                           ),
@@ -281,7 +272,7 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 200,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30),
-                color: Color.fromRGBO(98, 96, 56, 10),
+                color: Theme.of(context).colorScheme.surfaceTint,
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.4),
@@ -304,7 +295,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Text(
                             'Assine já o plano premium',
                             style: TextStyle(
-                              color: Colors.white,
+                              color: Theme.of(context).colorScheme.surface,
                               fontSize: 25,
                               fontWeight: FontWeight.bold,
                             ),
@@ -328,8 +319,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 'R\$ 39,99', // Novo valor ao lado
                                 style: TextStyle(
                                   color:
-                                      Colors
-                                          .white, // Cor de destaque para o valor promocional
+                                      Theme.of(context)
+                                          .colorScheme
+                                          .surface, // Cor de destaque para o valor promocional
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
                                 ),
@@ -340,30 +332,26 @@ class _HomeScreenState extends State<HomeScreen> {
                           ElevatedButton(
                             onPressed: () {},
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color.fromRGBO(
-                                57,
-                                55,
-                                21,
-                                10,
-                              ),
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.primary,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
                             ),
 
-                            child: const Text(
+                            child: Text(
                               'Assine já',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 255, 255, 255),
+                                color: Theme.of(context).colorScheme.onPrimary,
                               ),
                             ),
                           ),
                         ],
                       ),
 
-                      SizedBox(width: 50),
+                      SizedBox(width: 30),
                       // Espaçamento entre os textos
                       Column(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -373,13 +361,21 @@ class _HomeScreenState extends State<HomeScreen> {
                             height: 40,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
-                              color: Color.fromRGBO(2, 253, 14, 1),
+                              color:
+                                  Theme.of(
+                                    context,
+                                  ).colorScheme.tertiaryContainer,
                             ),
 
                             child: Center(
                               child: Text(
                                 '50% off',
-                                style: TextStyle(color: Colors.white),
+                                style: TextStyle(
+                                  color:
+                                      Theme.of(
+                                        context,
+                                      ).colorScheme.onTertiaryContainer,
+                                ),
                               ),
                             ),
                           ),
@@ -398,7 +394,7 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 50,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                color: Color.fromRGBO(255, 255, 255, 1),
+                color: Theme.of(context).colorScheme.surfaceContainerLowest,
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.22),
@@ -416,7 +412,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Icon(Icons.alarm, size: 30),
+                        child: Icon(
+                          Icons.alarm,
+                          size: 30,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
                       ),
                     ],
                   ),
@@ -430,13 +430,17 @@ class _HomeScreenState extends State<HomeScreen> {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
+                            color: Theme.of(context).colorScheme.primary,
                           ),
                         ),
                       ],
                     ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.chevron_right),
+                    icon: Icon(
+                      Icons.chevron_right,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
                     onPressed:
                         () => context.goNamed(AppRoutes.medications.name),
                   ),
@@ -452,7 +456,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(width: 20),
                 Text(
                   ' Relatório de Alimentação',
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
                 ),
               ],
             ),
@@ -463,7 +471,7 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 70,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
-                color: Color.fromRGBO(96, 114, 84, 10),
+                color: Theme.of(context).colorScheme.surfaceTint,
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.22),
@@ -483,12 +491,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: Theme.of(context).colorScheme.surface,
                       ),
                     ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.download_for_offline, color: Colors.white),
+                    icon: Icon(
+                      Icons.download_for_offline,
+                      color: Theme.of(context).colorScheme.surface,
+                    ),
                     onPressed: () {
                       // ação ao clicar no botão
                     },

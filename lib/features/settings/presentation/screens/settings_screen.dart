@@ -94,13 +94,13 @@ class SettingsScreen extends StatelessWidget {
           ),
           const Divider(),
 
-          _buildSettingsOption(
-            icon: Icons.brightness_6_outlined,
-            title: 'Modo Claro/Escuro',
-            onTap: () {
-              print('Modo Claro/Escuro');
-            },
+          SwitchListTile(
+            title: const Text('Modo Escuro'),
+            secondary: Icon(Icons.nightlight_round, color: Colors.black87),
+            value: false,
+            onChanged: (value) {},
           ),
+
           const Divider(),
 
           _buildSettingsOption(
