@@ -1,4 +1,5 @@
 import 'package:diabary/core/routes/app_router.dart';
+import 'package:diabary/core/theme/theme_provider.dart';
 import 'package:diabary/features/auth/presentation/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -97,8 +98,10 @@ class SettingsScreen extends StatelessWidget {
           SwitchListTile(
             title: const Text('Modo Escuro'),
             secondary: Icon(Icons.nightlight_round, color: Colors.black87),
-            value: false,
-            onChanged: (value) {},
+            value: context.watch<ThemeProvider>().themeMode == ThemeMode.dark,
+            onChanged: (bool value) {
+              context.read<ThemeProvider>().switchTheme(value);
+            },
           ),
 
           const Divider(),

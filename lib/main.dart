@@ -1,6 +1,7 @@
 import 'package:diabary/core/routes/app_router.dart';
 import 'package:diabary/core/theme/text_theme.dart';
 import 'package:diabary/core/theme/theme.dart';
+import 'package:diabary/core/theme/theme_provider.dart';
 import 'package:diabary/data/auth_service.dart';
 import 'package:diabary/features/auth/presentation/providers/auth_provider.dart';
 import 'package:diabary/firebase_options.dart';
@@ -23,13 +24,17 @@ class MainApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         Provider<AuthService>(create: (_) => AuthService()),
+
         ChangeNotifierProvider<AuthProvider>(
           create: (context) => AuthProvider(context.read<AuthService>()),
         ),
+
+        ChangeNotifierProvider<ThemeProvider>(create: (_) => ThemeProvider()),
       ],
       child: Builder(
         builder: (context) {
           final authProvider = context.read<AuthProvider>();
+          final themeProvider = context.watch<ThemeProvider>();
           final router = createRouter(authProvider);
 
           final textTheme = createTextTheme(context, 'Inter', 'Inter');
@@ -40,7 +45,7 @@ class MainApp extends StatelessWidget {
             routerConfig: router,
             theme: materialTheme.light(),
             darkTheme: materialTheme.dark(),
-            themeMode: ThemeMode.light,
+            themeMode: themeProvider.themeMode,
             localizationsDelegates: const [
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
