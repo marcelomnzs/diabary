@@ -32,11 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
               Center(
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10.0),
-                  child: SizedBox(
-                    width: 150,
-                    height: 150,
-                    child: Image(image: AssetImage('imagens/playstore.png')),
-                  ),
+                  child: SizedBox(width: 150, height: 150),
                 ),
               ),
 

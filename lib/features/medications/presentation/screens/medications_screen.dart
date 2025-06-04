@@ -216,7 +216,7 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30),
-                color: Color.fromARGB(255, 229, 225, 217),
+                color: Theme.of(context).colorScheme.primaryContainer,
               ),
               child: TableCalendar(
                 locale: 'pt_BR',

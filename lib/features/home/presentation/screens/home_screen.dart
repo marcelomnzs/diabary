@@ -137,25 +137,22 @@ class _HomeScreenState extends State<HomeScreen> {
                               borderRadius: BorderRadius.circular(10),
                               color: Theme.of(context).colorScheme.surfaceTint,
                             ),
-                            child: InkWell(
-                              borderRadius: BorderRadius.circular(10),
-                              onTap:
-                                  () => context.pushNamed(
-                                    AppRoutes.mealTracker.name,
-                                  ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: Image.asset(
-                                  'imagens/monte_seuparto.png',
-                                  fit: BoxFit.cover,
-                                ),
+                            child: IconButton(
+                              onPressed: () {},
+                              icon: Icon(
+                                Icons.food_bank,
+                                color: Theme.of(context).colorScheme.surface,
                               ),
+                              iconSize: 20.0,
                             ),
                           ),
                           Text(
                             'Monte seu prato',
                             style: TextStyle(
-                              color: Theme.of(context).colorScheme.onSurface,
+                              color:
+                                  Theme.of(context)
+                                      .colorScheme
+                                      .onSurface, // Cor de destaque para o valor promocional
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
                             ),
@@ -246,7 +243,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               color: Theme.of(context).colorScheme.surfaceTint,
                             ),
                             child: IconButton(
-                              onPressed: () {},
+                              onPressed:
+                                  () =>
+                                      context.pushNamed(AppRoutes.chatbot.name),
                               icon: Icon(
                                 Icons.food_bank,
                                 color: Theme.of(context).colorScheme.surface,
@@ -255,7 +254,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                           Text(
-                            'Meu perfil ???',
+                            'Assistente de IA',
                             style: TextStyle(
                               color:
                                   Theme.of(context)
@@ -453,7 +452,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: Theme.of(context).colorScheme.primary,
                       ),
                       onPressed:
-                          () => context.goNamed(AppRoutes.medications.name),
+                          () => context.pushNamed(AppRoutes.medications.name),
                     ),
                   ],
                 ),

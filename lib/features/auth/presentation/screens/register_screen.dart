@@ -46,11 +46,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               Center(
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10.0),
-                  child: SizedBox(
-                    width: 150,
-                    height: 150,
-                    child: Image(image: AssetImage('imagens/bombardilo.jpg')),
-                  ),
+                  child: SizedBox(width: 150, height: 150),
                 ),
               ),
 
