@@ -1,5 +1,7 @@
 import 'package:diabary/core/routes/app_router.dart';
+import 'package:diabary/domain/models/user_model.dart';
 import 'package:diabary/features/auth/presentation/providers/auth_provider.dart';
+import 'package:diabary/features/auth/presentation/providers/user_data_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -336,6 +338,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
     AuthProvider authProvider,
     BuildContext context,
   ) async {
+    final userDataProvider = context.read<UserDataProvider>();
+
     if (_passwordController.text != _confirmPasswordController.text) {
       authProvider.setError('As senhas não coincidem');
       return;
@@ -346,8 +350,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
       _passwordController.text,
     );
 
-    if (authProvider.user != null && authProvider.error == null) {
+    final user = authProvider.user;
+
+    if (user != null && authProvider.error == null) {
       await authProvider.updateUsername(_nameController.text);
+
+      final userModel = UserModel(
+        id: user.uid,
+        email: user.email!,
+        name: _nameController.text,
+      );
+
+      await userDataProvider.saveUserData(userModel);
 
       if (context.mounted) {
         context.goNamed(AppRoutes.home.name);

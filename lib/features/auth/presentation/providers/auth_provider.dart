@@ -30,6 +30,11 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void _setLoading(bool value) {
+    _isLoading = value;
+    notifyListeners();
+  }
+
   // Auth Functions
   Future<void> signIn(String email, String password) async {
     try {
@@ -116,11 +121,6 @@ class AuthProvider with ChangeNotifier {
     } finally {
       _setLoading(false);
     }
-  }
-
-  void _setLoading(bool value) {
-    _isLoading = value;
-    notifyListeners();
   }
 
   String _parseFirebaseError(String code) {

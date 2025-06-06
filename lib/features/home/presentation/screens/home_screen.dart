@@ -1,5 +1,6 @@
 import 'package:diabary/core/routes/app_router.dart';
 import 'package:diabary/features/auth/presentation/providers/auth_provider.dart';
+import 'package:diabary/features/auth/presentation/providers/user_data_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -15,8 +16,22 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0; // Índice do botão selecionado
 
   @override
+  void initState() {
+    super.initState();
+    final authProvider = context.read<AuthProvider>();
+    final userProvider = context.read<UserDataProvider>();
+
+    final user = authProvider.user;
+
+    if (user != null) {
+      userProvider.loadUserData(user.uid);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final authProvider = context.watch<AuthProvider>();
+    final userDataProvider = context.watch<UserDataProvider>();
+    final user = userDataProvider.userData;
 
     return Scaffold(
       body: SafeArea(
@@ -38,19 +53,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           top: 8.0,
                         ), // Espaçamento apenas à esquerda e no topo
                         child:
-                            authProvider.user != null
-                                ? Text(
-                                  'Olá, ${authProvider.user!.displayName}',
+                            Text(
+                                  'Olá, ${user?.name ?? 'Usuário'}',
                                   style:
                                       Theme.of(context).textTheme.displaySmall,
                                 )
-                                : Text(
-                                  'Olá, Usuário',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
                       ),
 
                       Padding(
