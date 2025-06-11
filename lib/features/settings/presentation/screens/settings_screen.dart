@@ -26,8 +26,6 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final authProvider = context.watch<AuthProvider>();
     return Scaffold(
-      backgroundColor: Colors.white,
-      // AppBar personalizada com cor de fundo verde oliva
       appBar: AppBar(
         backgroundColor: const Color(0xFF7A754E),
         foregroundColor: Colors.white,
@@ -49,11 +47,12 @@ class SettingsScreen extends StatelessWidget {
                   onTap: () => context.goNamed(AppRoutes.profilePage.name),
                   child: CircleAvatar(
                     radius: 35,
-                    backgroundColor: Colors.grey[300],
+                    backgroundColor:
+                        Theme.of(context).colorScheme.primaryContainer,
                     child: Icon(
                       Icons.person,
                       size: 40,
-                      color: Colors.green[700],
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
                 ),
@@ -63,7 +62,7 @@ class SettingsScreen extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF7A754E),
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
               ],
