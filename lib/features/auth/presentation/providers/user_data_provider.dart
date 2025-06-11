@@ -27,7 +27,6 @@ class UserDataProvider with ChangeNotifier {
   UserDataProvider(this._userRepository);
 
   Future<void> loadUserData(String uid) async {
-    _setLoading(true);
     try {
       final user = await _userRepository.getUserById(uid);
 

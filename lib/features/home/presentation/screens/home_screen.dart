@@ -18,14 +18,16 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    final authProvider = context.read<AuthProvider>();
-    final userProvider = context.read<UserDataProvider>();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final authProvider = context.read<AuthProvider>();
+      final userProvider = context.read<UserDataProvider>();
 
-    final user = authProvider.user;
+      final user = authProvider.user;
 
-    if (user != null) {
-      userProvider.loadUserData(user.uid);
-    }
+      if (user != null) {
+        userProvider.loadUserData(user.uid);
+      }
+    });
   }
 
   @override
@@ -39,92 +41,95 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: const EdgeInsets.all(10.0),
           child: Column(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment:
-                        CrossAxisAlignment.start, // Alinha os textos à esquerda
-                    children: [
-                      SizedBox(height: 40),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          left: 8.0,
-                          top: 8.0,
-                        ), // Espaçamento apenas à esquerda e no topo
-                        child:
-                            Text(
-                                  'Olá, ${user?.name ?? 'Usuário'}',
-                                  style:
-                                      Theme.of(context).textTheme.displaySmall,
-                                )
-                      ),
-
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          left: 8.0,
-                          top: 8.0,
-                        ), // Espaçamento consistente
-                        child: Text(
-                          'Como você se sente hoje?',
-                          style: Theme.of(context).textTheme.bodyLarge,
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment:
+                          CrossAxisAlignment
+                              .start, // Alinha os textos à esquerda
+                      children: [
+                        SizedBox(height: 40),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            left: 8.0,
+                            top: 8.0,
+                          ), // Espaçamento apenas à esquerda e no topo
+                          child: Text(
+                            'Olá, ${user?.name ?? 'Usuário'}',
+                            style: Theme.of(context).textTheme.displaySmall,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
 
-                  SizedBox(width: 120),
-                  // Espaçamento entre os textos e os botões
-                  Column(
-                    children: [
-                      SizedBox(height: 40),
-                      // Espaçamento acima dos botões
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-
-                            child: IconButton(
-                              onPressed: () {
-                                // Ação ao pressionar o botão
-                              },
-                              icon: Icon(
-                                Icons.notifications,
-                                color: Theme.of(context).colorScheme.onPrimary,
-                              ),
-                              iconSize: 20.0,
-                            ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            left: 8.0,
+                            top: 8.0,
+                          ), // Espaçamento consistente
+                          child: Text(
+                            'Como você se sente hoje?',
+                            style: Theme.of(context).textTheme.bodyLarge,
                           ),
+                        ),
+                      ],
+                    ),
 
-                          SizedBox(width: 5),
-
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-
-                            child: IconButton(
-                              onPressed:
-                                  () => context.pushNamed(
-                                    AppRoutes.settings.name,
-                                  ),
-                              icon: Icon(
-                                Icons.settings,
-                                color: Theme.of(context).colorScheme.onPrimary,
+                    SizedBox(width: 120),
+                    // Espaçamento entre os textos e os botões
+                    Column(
+                      children: [
+                        SizedBox(height: 40),
+                        // Espaçamento acima dos botões
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Theme.of(context).colorScheme.primary,
                               ),
-                              iconSize: 20.0,
+
+                              child: IconButton(
+                                onPressed: () {
+                                  // Ação ao pressionar o botão
+                                },
+                                icon: Icon(
+                                  Icons.notifications,
+                                  color:
+                                      Theme.of(context).colorScheme.onPrimary,
+                                ),
+                                iconSize: 20.0,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
+
+                            SizedBox(width: 5),
+
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+
+                              child: IconButton(
+                                onPressed:
+                                    () => context.pushNamed(
+                                      AppRoutes.settings.name,
+                                    ),
+                                icon: Icon(
+                                  Icons.settings,
+                                  color:
+                                      Theme.of(context).colorScheme.onPrimary,
+                                ),
+                                iconSize: 20.0,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
               SizedBox(height: 20), // Espaçamento entre os textos e os botões
               Center(
