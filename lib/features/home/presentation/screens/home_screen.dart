@@ -38,100 +38,92 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(10.0),
+          padding: const EdgeInsets.all(12.0),
           child: Column(
             children: [
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment:
-                          CrossAxisAlignment
-                              .start, // Alinha os textos à esquerda
-                      children: [
-                        SizedBox(height: 40),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            left: 8.0,
-                            top: 8.0,
-                          ), // Espaçamento apenas à esquerda e no topo
-                          child: Text(
-                            'Olá, ${user?.name ?? 'Usuário'}',
-                            style: Theme.of(context).textTheme.displaySmall,
-                          ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: 8.0,
+                          top: 8.0,
+                        ), // Espaçamento apenas à esquerda e no topo
+                        child: Text(
+                          'Olá, ${user?.name ?? 'Usuário'}',
+                          style: Theme.of(context).textTheme.displaySmall,
                         ),
+                      ),
 
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            left: 8.0,
-                            top: 8.0,
-                          ), // Espaçamento consistente
-                          child: Text(
-                            'Como você se sente hoje?',
-                            style: Theme.of(context).textTheme.bodyLarge,
-                          ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: 8.0,
+                          top: 8.0,
+                        ), // Espaçamento consistente
+                        child: Text(
+                          'Como você se sente hoje?',
+                          style: Theme.of(context).textTheme.bodyLarge,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
+                  ),
 
-                    SizedBox(width: 120),
-                    // Espaçamento entre os textos e os botões
-                    Column(
-                      children: [
-                        SizedBox(height: 40),
-                        // Espaçamento acima dos botões
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
-
-                              child: IconButton(
-                                onPressed: () {
-                                  // Ação ao pressionar o botão
-                                },
-                                icon: Icon(
-                                  Icons.notifications,
-                                  color:
-                                      Theme.of(context).colorScheme.onPrimary,
-                                ),
-                                iconSize: 20.0,
-                              ),
+                  Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Theme.of(context).colorScheme.primary,
                             ),
 
-                            SizedBox(width: 5),
-
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Theme.of(context).colorScheme.primary,
+                            child: IconButton(
+                              onPressed: () {
+                                // Ação ao pressionar o botão
+                              },
+                              icon: Icon(
+                                Icons.notifications,
+                                color: Theme.of(context).colorScheme.onPrimary,
                               ),
-
-                              child: IconButton(
-                                onPressed:
-                                    () => context.pushNamed(
-                                      AppRoutes.settings.name,
-                                    ),
-                                icon: Icon(
-                                  Icons.settings,
-                                  color:
-                                      Theme.of(context).colorScheme.onPrimary,
-                                ),
-                                iconSize: 20.0,
-                              ),
+                              iconSize: 20.0,
                             ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                          ),
+
+                          SizedBox(width: 5),
+
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+
+                            child: IconButton(
+                              onPressed:
+                                  () => context.pushNamed(
+                                    AppRoutes.settings.name,
+                                  ),
+                              icon: Icon(
+                                Icons.settings,
+                                color: Theme.of(context).colorScheme.onPrimary,
+                              ),
+                              iconSize: 20.0,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              SizedBox(height: 20), // Espaçamento entre os textos e os botões
+
+              SizedBox(height: 30),
+
               Center(
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
@@ -150,7 +142,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               color: Theme.of(context).colorScheme.surfaceTint,
                             ),
                             child: IconButton(
-                              onPressed: () {},
+                              onPressed:
+                                  () => context.pushNamed(
+                                    AppRoutes.mealTracker.name,
+                                  ),
                               icon: Icon(
                                 Icons.food_bank,
                                 color: Theme.of(context).colorScheme.surface,
@@ -373,8 +368,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
 
-                        SizedBox(width: 30),
-                        // Espaçamento entre os textos
                         Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
