@@ -1,12 +1,14 @@
 import 'dart:convert';
-import 'package:diabary/features/chatbot/api.key.dart';
+// import 'package:diabary/features/chatbot/api.key.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 Future<String> getOpenRouterResponse(String pergunta) async {
+  var apiKey = dotenv.env['API_CHATBOT'] ?? '';
   const endpoint = 'https://api.groq.com/openai/v1/chat/completions';
 
   final headers = {
-    'Authorization': 'Bearer $GROQ_API_KEY',
+    'Authorization': 'Bearer $apiKey',
     'Content-Type': 'application/json',
   };
   final body = jsonEncode({
