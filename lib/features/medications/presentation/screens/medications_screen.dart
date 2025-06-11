@@ -5,6 +5,9 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'dart:convert';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
+import 'package:android_intent_plus/android_intent.dart';
+import 'package:android_intent_plus/flag.dart';
+import 'package:flutter/services.dart';
 
 class MedicamentoLembrete {
   final String nome;
@@ -60,6 +63,7 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
     tz.initializeTimeZones();
     _initNotifications();
     _loadLembretes();
+    _requestNotificationPermission(); // <-- Adicione esta linha
   }
 
   Future<void> _initNotifications() async {
@@ -141,24 +145,78 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
       lembrete.horario.hour,
       lembrete.horario.minute,
     );
-    await flutterLocalNotificationsPlugin.zonedSchedule(
-      scheduledDate.hashCode,
-      'Hora do medicamento',
-      'Tomar: ${lembrete.nome}',
-      scheduledDate,
-      const NotificationDetails(
-        android: AndroidNotificationDetails(
-          'medicamentos',
-          'Medicamentos',
-          channelDescription: 'Notificações de lembrete de medicamentos',
-          importance: Importance.max,
-          priority: Priority.high,
+
+    // Verifique se está no futuro
+    if (scheduledDate.isBefore(tz.TZDateTime.now(tz.local))) {
+      ScaffoldMessenger.of(context);
+      return;
+    }
+
+    print('Agendando notificação para: $scheduledDate');
+    try {
+      await flutterLocalNotificationsPlugin.zonedSchedule(
+        scheduledDate.hashCode,
+        'Hora do medicamento',
+        'Tomar: ${lembrete.nome}',
+        scheduledDate,
+        const NotificationDetails(
+          android: AndroidNotificationDetails(
+            'medicamentos',
+            'Medicamentos',
+            channelDescription: 'Notificações de lembrete de medicamentos',
+            importance: Importance.max,
+            priority: Priority.high,
+          ),
         ),
-      ),
-      androidScheduleMode:
-          AndroidScheduleMode.exactAllowWhileIdle, // <-- Adicione esta linha
-      matchDateTimeComponents: DateTimeComponents.time,
-    );
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      );
+    } catch (e) {
+      if (e is PlatformException && e.code == 'exact_alarms_not_permitted') {
+        // Mostre um alerta e abra as configurações
+        await showDialog(
+          context: context,
+          builder:
+              (context) => AlertDialog(
+                title: const Text('Permissão necessária'),
+                content: const Text(
+                  'Para alarmes exatos funcionarem, permita "Alarmes e lembretes" nas configurações do sistema.',
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('Cancelar'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      openExactAlarmPermissionSettings();
+                    },
+                    child: const Text('Abrir configurações'),
+                  ),
+                ],
+              ),
+        );
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+  Future<void> _requestNotificationPermission() async {
+    // Para Android 13+ (API 33)
+    final androidPlugin =
+        flutterLocalNotificationsPlugin
+            .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin
+            >();
+    await androidPlugin?.requestNotificationsPermission();
+
+    // Para iOS (já estava no seu código)
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+          IOSFlutterLocalNotificationsPlugin
+        >()
+        ?.requestPermissions(alert: true, badge: true, sound: true);
   }
 
   String _formatDate(DateTime date) =>
@@ -216,7 +274,7 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30),
-                color: Theme.of(context).colorScheme.primaryContainer,
+                color: Theme.of(context).colorScheme.inversePrimary,
               ),
               child: TableCalendar(
                 locale: 'pt_BR',
@@ -267,7 +325,7 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
                     );
                   },
                 ),
-                calendarStyle: const CalendarStyle(
+                calendarStyle: CalendarStyle(
                   todayDecoration: BoxDecoration(
                     color: Color.fromRGBO(131, 128, 66, 0.965),
                     shape: BoxShape.circle,
@@ -375,7 +433,10 @@ class _DialogNovoLembreteState extends State<_DialogNovoLembrete> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Novo Lembrete'),
+      title: Text(
+        'Novo Lembrete',
+        style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+      ),
       content: SingleChildScrollView(
         child: Column(
           children: [
@@ -392,7 +453,12 @@ class _DialogNovoLembreteState extends State<_DialogNovoLembrete> {
             const SizedBox(height: 8),
             Row(
               children: [
-                const Text('Horário:'),
+                Text(
+                  'Horário:',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                ),
                 const SizedBox(width: 8),
                 Text(_horario.format(context)),
                 IconButton(
@@ -437,4 +503,12 @@ class _DialogNovoLembreteState extends State<_DialogNovoLembrete> {
       ],
     );
   }
+}
+
+Future<void> openExactAlarmPermissionSettings() async {
+  final intent = AndroidIntent(
+    action: 'android.settings.REQUEST_SCHEDULE_EXACT_ALARM',
+    flags: <int>[Flag.FLAG_ACTIVITY_NEW_TASK],
+  );
+  await intent.launch();
 }

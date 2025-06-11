@@ -23,202 +23,246 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              return SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                  child: IntrinsicHeight(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const SizedBox(height: 100),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(height: 100),
 
-                        Center(
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10.0),
-                            child: SizedBox(width: 150, height: 150),
-                          ),
-                        ),
+              Center(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10.0),
+                  child: SizedBox(width: 150, height: 150),
+                ),
+              ),
 
-                        const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.all(50.0),
+                child: TextField(
+                  controller: _emailController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Informe seu email',
+                    labelText: 'Email',
+                  ),
+                ),
+              ),
 
-                        TextField(
-                          controller: _emailController,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            hintText: 'Informe seu email',
-                            labelText: 'Email',
-                          ),
-                        ),
+              SizedBox(height: 0),
 
-                        const SizedBox(height: 16),
-
-                        TextField(
-                          controller: _passwordController,
-                          obscureText: !_isPasswordVisible,
-                          decoration: InputDecoration(
-                            border: const OutlineInputBorder(),
-                            hintText: 'Informe sua senha',
-                            labelText: 'Senha',
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                _isPasswordVisible
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  _isPasswordVisible = !_isPasswordVisible;
-                                });
-                              },
-                            ),
-                          ),
-                        ),
-
-                        const SizedBox(height: 30),
-
-                        Row(
-                          children: [
-                            const Expanded(
-                              child: Divider(
-                                color: Color.fromARGB(255, 150, 149, 149),
-                                thickness: 1,
-                                endIndent: 10,
-                              ),
-                            ),
-                            const Text(
-                              'Faça o seu login com',
-                              style: TextStyle(
-                                fontFamily: 'SourceSans3',
-                                fontSize: 15,
-                                color: Color.fromARGB(255, 0, 0, 0),
-                              ),
-                            ),
-                            const Expanded(
-                              child: Divider(
-                                color: Color.fromARGB(255, 150, 149, 149),
-                                thickness: 1,
-                                indent: 10,
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        const SizedBox(height: 30),
-
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            _buildSocialButton(
-                              icon: Icons.g_mobiledata,
-                              color: Colors.red,
-                              label: 'Google',
-                              onPressed: () {},
-                            ),
-                            const SizedBox(width: 8),
-                            _buildSocialButton(
-                              icon: Icons.apple,
-                              color: Colors.black,
-                              label: 'Apple',
-                              onPressed: () {},
-                            ),
-                            const SizedBox(width: 8),
-                            _buildSocialButton(
-                              icon: Icons.facebook,
-                              color: Colors.blue,
-                              label: 'Facebook',
-                              onPressed: () {},
-                            ),
-                          ],
-                        ),
-
-                        const SizedBox(height: 30),
-
-                        SizedBox(
-                          width: double.infinity,
-                          height: 50,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              _handleLogin(authProvider, context);
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  Theme.of(context).colorScheme.primary,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                            ),
-                            child: Text(
-                              'Login',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).colorScheme.onPrimary,
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        const SizedBox(height: 16),
-
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Text(
-                                'Não possui conta?',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              const SizedBox(width: 4),
-                              GestureDetector(
-                                onTap:
-                                    () =>
-                                        context.goNamed(AppRoutes.signup.name),
-                                child: const Text(
-                                  'Registre-se',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.blueAccent,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 50.0),
+                child: TextField(
+                  controller: _passwordController,
+                  obscureText: !_isPasswordVisible,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Informe sua senha',
+                    labelText: 'Senha',
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isPasswordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isPasswordVisible = !_isPasswordVisible;
+                        });
+                      },
                     ),
                   ),
                 ),
-              );
-            },
+              ),
+
+              SizedBox(height: 20),
+
+              Center(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Divider(
+                        color: const Color.fromARGB(
+                          255,
+                          150,
+                          149,
+                          149,
+                        ), // Cor do traço
+                        thickness: 1, // Espessura do traço
+                        endIndent: 10, // Espaçamento entre o traço e o texto
+                      ),
+                    ),
+
+                    Text(
+                      'Faça o seu login com',
+                      style: TextStyle(
+                        fontFamily: 'SourceSans3',
+                        fontSize: 15,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                    Expanded(
+                      child: Divider(
+                        color: Color.fromARGB(
+                          255,
+                          150,
+                          149,
+                          149,
+                        ), // Cor do traço
+                        thickness: 1, // Espessura do traço
+                        indent: 10, // Espaçamento entre o traço e o texto
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+
+                children: [
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      // Handle Google login action
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFFFFFFF),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 15.0,
+                        vertical: 35.0,
+                      ),
+                    ),
+                    icon: const Icon(Icons.g_mobiledata, color: Colors.red),
+                    label: const Text(
+                      'Google',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(width: 8),
+                  // Espaçamento entre os botões
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      // Handle Apple login action
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFFFFFFF),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 15.0,
+                        vertical: 35.0,
+                      ),
+                    ),
+
+                    icon: const Icon(
+                      Icons.apple, // Ícone da Apple
+                      color: Colors.black,
+                    ),
+                    label: const Text(
+                      'Apple',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(width: 8),
+                  // Espaçamento entre os botões
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      // Handle Facebook login action
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFFFFFFF),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12.0,
+                        vertical: 35.0,
+                      ),
+                    ),
+                    icon: const Icon(
+                      Icons.facebook, // Ícone do Facebook
+                      color: Colors.blue,
+                    ),
+                    label: const Text(
+                      'Facebook',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+              Padding(
+                padding: const EdgeInsets.all(48.0),
+                child: SizedBox(
+                  width: 250,
+                  height: 35,
+
+                  child: ElevatedButton(
+                    onPressed: () {
+                      _handleLogin(authProvider, context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromRGBO(57, 55, 21, 100),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                    child: Text(
+                      'Login',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+              Padding(
+                padding: EdgeInsets.only(bottom: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Não possui conta?',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                    SizedBox(width: 4),
+                    GestureDetector(
+                      onTap: () => context.goNamed(AppRoutes.signup.name),
+                      child: Text(
+                        'Registre-se',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildSocialButton({
-    required IconData icon,
-    required Color color,
-    required String label,
-    required VoidCallback onPressed,
-  }) {
-    return ElevatedButton.icon(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFFFFFFFF),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
-      ),
-      icon: Icon(icon, color: color),
-      label: Text(
-        label,
-        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
       ),
     );
   }
