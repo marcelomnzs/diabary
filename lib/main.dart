@@ -8,7 +8,9 @@ import 'package:diabary/domain/repositories/user_repository.dart';
 import 'package:diabary/features/auth/presentation/providers/auth_provider.dart';
 import 'package:diabary/features/auth/presentation/providers/user_data_provider.dart';
 import 'package:diabary/features/medications/presentation/providers/calendar_provider.dart';
+import 'package:diabary/features/medications/presentation/providers/medications_provider.dart';
 import 'package:diabary/features/medications/presentation/providers/notifications_provider.dart';
+import 'package:diabary/features/medications/presentation/providers/week_days_provider.dart';
 import 'package:diabary/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -26,12 +28,8 @@ Future<void> main() async {
 
   final authService = AuthService();
   final userRepository = UserRepository();
-  final authProvider = AuthProvider(authService);
-
   final notificationsService = NotificationsService();
   await notificationsService.initNotification();
-  final notificationsProvider = NotificationsProvider(notificationsService);
-  await notificationsProvider.loadNotifications();
 
   runApp(
     MultiProvider(
@@ -40,28 +38,39 @@ Future<void> main() async {
         Provider<UserRepository>.value(value: userRepository),
         Provider<NotificationsService>.value(value: notificationsService),
 
-        ChangeNotifierProvider<AuthProvider>.value(value: authProvider),
-        ChangeNotifierProvider<NotificationsProvider>.value(
-          value: notificationsProvider,
+        ChangeNotifierProvider<AuthProvider>(
+          create: (_) => AuthProvider(authService, userRepository),
         ),
-
+        ChangeNotifierProvider<NotificationsProvider>(
+          create:
+              (_) =>
+                  NotificationsProvider(notificationsService)
+                    ..loadNotifications(),
+        ),
         ChangeNotifierProvider<ThemeProvider>(create: (_) => ThemeProvider()),
+        ChangeNotifierProxyProvider<AuthProvider, MedicationsProvider>(
+          create: (_) => MedicationsProvider(),
+          update: (_, authProvider, medicationsProvider) {
+            medicationsProvider ??= MedicationsProvider();
+            medicationsProvider.setUserId(authProvider.user?.uid);
+            return medicationsProvider;
+          },
+        ),
         ChangeNotifierProvider<UserDataProvider>(
           create: (_) => UserDataProvider(userRepository),
         ),
         ChangeNotifierProvider<CalendarProvider>(
           create: (_) => CalendarProvider(),
         ),
+        ChangeNotifierProvider(create: (_) => WeekDaysProvider()),
       ],
-      child: MainApp(authProvider: authProvider),
+      child: const MainApp(),
     ),
   );
 }
 
 class MainApp extends StatefulWidget {
-  final AuthProvider authProvider;
-
-  const MainApp({super.key, required this.authProvider});
+  const MainApp({super.key});
 
   @override
   State<MainApp> createState() => _MainAppState();
@@ -73,7 +82,7 @@ class _MainAppState extends State<MainApp> {
   @override
   void initState() {
     super.initState();
-    _router = createRouter(widget.authProvider);
+    _router = createRouter(context.read<AuthProvider>());
   }
 
   @override

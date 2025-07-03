@@ -1,19 +1,23 @@
 import 'dart:async';
 
 import 'package:diabary/data/auth_service.dart';
+import 'package:diabary/domain/repositories/user_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 
 class AuthProvider with ChangeNotifier {
   final AuthService _authService;
+  final UserRepository _userRepository;
   User? _user;
   bool _isLoading = false;
   String? _error;
 
-  AuthProvider(this._authService) {
+  AuthProvider(this._authService, this._userRepository) {
     // Monitora alguma mudança na autenticação
-    _authService.authStateChanges.listen((user) {
+    _authService.authStateChanges.listen((user) async{
       _user = user;
+
+      if(user != null) await _userRepository.createUserDocIfNotExists(user);
       notifyListeners();
     });
   }

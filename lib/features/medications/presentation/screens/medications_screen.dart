@@ -1,6 +1,8 @@
 import 'package:diabary/features/medications/presentation/providers/calendar_provider.dart';
+import 'package:diabary/features/medications/presentation/providers/medications_provider.dart';
 import 'package:diabary/features/medications/presentation/providers/notifications_provider.dart';
 import 'package:diabary/features/medications/presentation/widgets/medications_calendar.dart';
+import 'package:diabary/features/medications/presentation/widgets/medications_form.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -20,16 +22,22 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
     Future.microtask(() {
       if (!mounted) return;
       context.read<NotificationsProvider>().loadNotifications();
+      context.read<MedicationsProvider>().loadMedications();
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final DateTime focusedDay = context.watch<CalendarProvider>().focusedDay;
-    final notifications = context.watch<NotificationsProvider>();
+    final medicationsProvider = context.watch<MedicationsProvider>();
+
+    if (medicationsProvider.isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
 
     return Scaffold(
       appBar: AppBar(
+        foregroundColor: Theme.of(context).colorScheme.onInverseSurface,
         title: Text(
           'Medicamentos',
           style: TextStyle(
@@ -64,39 +72,8 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
               ],
             ),
             SizedBox(height: 30),
-            ElevatedButton(
-              onPressed: () {
-                notifications.showNotification(title: "Title", body: "Body");
-              },
-              child: const Text('Enviar notificação'),
-            ),
-
-            SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () async {
-                notifications.scheduleNotification(
-                  title: "Title",
-                  body: "Teste 2",
-                  hour: 21,
-                  minute: 53,
-                );
-
-                await context.read<NotificationsProvider>().loadNotifications();
-              },
-              child: const Text('Enviar notificação programada'),
-            ),
-            SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () async {
-                notifications.cancelAllNotifications();
-                context.read<NotificationsProvider>().clear();
-              },
-
-              child: const Text('Limpar notificações agendadas'),
-            ),
-            SizedBox(height: 30),
             Text(
-              'Lista de Notificações agendadas',
+              'Meus medicamentos',
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             SizedBox(height: 15),
@@ -126,6 +103,46 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
             ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            backgroundColor: Theme.of(context).colorScheme.surface,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+            ),
+            builder: (context) {
+              return AnimatedPadding(
+                duration: const Duration(milliseconds: 150),
+                curve: Curves.easeOut,
+                padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom,
+                ),
+                child: SafeArea(
+                  top: false,
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: MediaQuery.of(context).size.height * 0.4,
+                      maxHeight: MediaQuery.of(context).size.height * 0.8,
+                    ),
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 16,
+                      ),
+                      child: MedicationsForm(),
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+        },
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Theme.of(context).colorScheme.onPrimary,
+        child: const Icon(Icons.add),
       ),
     );
   }
