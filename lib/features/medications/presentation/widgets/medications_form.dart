@@ -76,12 +76,6 @@ class _MedicationsFormState extends State<MedicationsForm> {
                 hintText: '850mg',
                 labelText: 'Informações adicionais',
               ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'O campo não pode estar vazio';
-                }
-                return null;
-              },
               controller: _infoController,
             ),
             const SizedBox(height: 15),
@@ -141,6 +135,7 @@ class _MedicationsFormState extends State<MedicationsForm> {
 
                   if (!formValid) return;
 
+                  // TODO: Alterar forma de visualizar o erro do form
                   if (selectedDaysInts.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
@@ -167,6 +162,7 @@ class _MedicationsFormState extends State<MedicationsForm> {
                       body: medication.notas,
                       hour: _selectedTime.hour,
                       minute: _selectedTime.minute,
+                      weekdays: selectedDaysInts,
                     );
 
                     ScaffoldMessenger.of(context).showSnackBar(

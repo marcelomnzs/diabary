@@ -1,0 +1,85 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:diabary/domain/models/medication_model.dart';
+import 'package:diabary/domain/models/medication_event_model.dart';
+
+class MedicationsRepository {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  CollectionReference<Map<String, dynamic>> _collection(String userId) {
+    return _firestore.collection('users').doc(userId).collection('medications');
+  }
+
+  Future<List<MedicationModel>> fetchMedications(String userId) async {
+    final query = await _collection(userId).get();
+    return query.docs.map((doc) {
+      return MedicationModel.fromMap({...doc.data(), 'id': doc.id});
+    }).toList();
+  }
+
+  Future<String> addMedication(String userId, MedicationModel med) async {
+    final doc = await _collection(userId).add(med.toMap());
+    await doc.update({'id': doc.id});
+
+    return doc.id;
+  }
+
+  Future<void> deleteMedication(String userId, String medId) async {
+    final medRef = _collection(userId).doc(medId);
+
+    final events = await medRef.collection('events').get();
+    for (final e in events.docs) {
+      await e.reference.delete();
+    }
+
+    await medRef.delete();
+  }
+
+  Future<void> deleteAllMedications(String userId) async {
+    final meds = await _collection(userId).get();
+
+    for (final med in meds.docs) {
+      await deleteMedication(userId, med.id);
+    }
+  }
+
+  Future<void> saveEvent(
+    String userId,
+    String medId,
+    MedicationEventModel event,
+  ) async {
+    final dateId = event.date.toIso8601String();
+    await _collection(userId).doc(medId).collection('events').doc(dateId).set({
+      'tomou': event.wasTaken,
+    });
+  }
+
+  Future<List<MedicationEventModel>> fetchEventsForDate(
+    String userId,
+    DateTime day,
+  ) async {
+    final dayId = DateTime(day.year, day.month, day.day).toIso8601String();
+    final query = await _collection(userId).get();
+
+    List<MedicationEventModel> events = [];
+
+    for (final doc in query.docs) {
+      final medId = doc.id;
+      final eventDoc =
+          await _collection(
+            userId,
+          ).doc(medId).collection('events').doc(dayId).get();
+
+      if (eventDoc.exists) {
+        events.add(
+          MedicationEventModel.fromMap({
+            ...eventDoc.data()!,
+            'medicationId': medId,
+            'date': dayId,
+          }),
+        );
+      }
+    }
+
+    return events;
+  }
+}

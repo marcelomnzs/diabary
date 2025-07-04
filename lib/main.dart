@@ -3,8 +3,10 @@ import 'package:diabary/core/theme/text_theme.dart';
 import 'package:diabary/core/theme/theme.dart';
 import 'package:diabary/core/theme/theme_provider.dart';
 import 'package:diabary/data/auth_service.dart';
+import 'package:diabary/data/medications_service.dart';
 import 'package:diabary/data/notifications_service.dart';
 import 'package:diabary/domain/repositories/user_repository.dart';
+import 'package:diabary/domain/repositories/medications_repository.dart';
 import 'package:diabary/features/auth/presentation/providers/auth_provider.dart';
 import 'package:diabary/features/auth/presentation/providers/user_data_provider.dart';
 import 'package:diabary/features/medications/presentation/providers/calendar_provider.dart';
@@ -21,23 +23,31 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 
 Future<void> main() async {
+  final notificationsService = NotificationsService();
+
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load();
+  await notificationsService.initNotification();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await initializeDateFormatting('pt_BR', null);
 
+  // Instâncias iniciais dos serviços
   final authService = AuthService();
   final userRepository = UserRepository();
-  final notificationsService = NotificationsService();
-  await notificationsService.initNotification();
+  final medicationsRepository = MedicationsRepository();
+  final medicationsService = MedicationsService(medicationsRepository);
 
   runApp(
     MultiProvider(
       providers: [
+        // Services / Repositories
         Provider<AuthService>.value(value: authService),
         Provider<UserRepository>.value(value: userRepository),
         Provider<NotificationsService>.value(value: notificationsService),
+        Provider<MedicationsRepository>.value(value: medicationsRepository),
+        Provider<MedicationsService>.value(value: medicationsService),
 
+        // Providers
         ChangeNotifierProvider<AuthProvider>(
           create: (_) => AuthProvider(authService, userRepository),
         ),
@@ -49,9 +59,9 @@ Future<void> main() async {
         ),
         ChangeNotifierProvider<ThemeProvider>(create: (_) => ThemeProvider()),
         ChangeNotifierProxyProvider<AuthProvider, MedicationsProvider>(
-          create: (_) => MedicationsProvider(),
-          update: (_, authProvider, medicationsProvider) {
-            medicationsProvider ??= MedicationsProvider();
+          create: (context) => MedicationsProvider(medicationsService),
+          update: (context, authProvider, medicationsProvider) {
+            medicationsProvider ??= MedicationsProvider(medicationsService);
             medicationsProvider.setUserId(authProvider.user?.uid);
             return medicationsProvider;
           },
@@ -62,7 +72,9 @@ Future<void> main() async {
         ChangeNotifierProvider<CalendarProvider>(
           create: (_) => CalendarProvider(),
         ),
-        ChangeNotifierProvider(create: (_) => WeekDaysProvider()),
+        ChangeNotifierProvider<WeekDaysProvider>(
+          create: (_) => WeekDaysProvider(),
+        ),
       ],
       child: const MainApp(),
     ),

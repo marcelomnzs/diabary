@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class MedicationModel {
-  final String id;
+  final String? id;
   final String nome;
   final String notas;
   final TimeOfDay horario;

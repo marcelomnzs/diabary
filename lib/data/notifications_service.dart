@@ -1,84 +1,93 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
-import 'package:timezone/data/latest.dart' as tz_latest;
-import 'package:shared_preferences/shared_preferences.dart';
 
 class NotificationsService {
-  final FlutterLocalNotificationsPlugin notificationsPlugin =
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
-  static const _prefsKey = 'notification_id_counter';
-  bool _isInitialized = false;
-  int _notificationIdCounter = 0;
-
   Future<void> initNotification() async {
-    if (_isInitialized) return;
-
-    // Timezone setup
-    tz_latest.initializeTimeZones();
+    // Inicializa as zonas de tempo
+    tz.initializeTimeZones();
     final String currentTimeZone = await FlutterTimezone.getLocalTimezone();
     tz.setLocalLocation(tz.getLocation(currentTimeZone));
 
-    // Android
-    const initSettingsAndroid = AndroidInitializationSettings(
-      '@mipmap/ic_launcher',
+    const AndroidInitializationSettings androidInitSettings =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    const DarwinInitializationSettings iosInitSettings =
+        DarwinInitializationSettings();
+
+    const InitializationSettings initSettings = InitializationSettings(
+      android: androidInitSettings,
+      iOS: iosInitSettings,
     );
 
-    // iOS
-    const initSettingsIOS = DarwinInitializationSettings(
-      requestAlertPermission: true,
-      requestBadgePermission: true,
-      requestSoundPermission: true,
-    );
+    await flutterLocalNotificationsPlugin.initialize(initSettings);
 
-    const initSettings = InitializationSettings(
-      android: initSettingsAndroid,
-      iOS: initSettingsIOS,
-    );
+    if (await Permission.notification.isDenied ||
+        await Permission.notification.isPermanentlyDenied) {
+      await Permission.notification.request();
+    }
 
-    await notificationsPlugin.initialize(initSettings);
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >()
+        ?.requestExactAlarmsPermission();
 
-    final prefs = await SharedPreferences.getInstance();
-    _notificationIdCounter = prefs.getInt(_prefsKey) ?? 0;
-
-    _isInitialized = true;
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+          IOSFlutterLocalNotificationsPlugin
+        >()
+        ?.requestPermissions(alert: true, badge: true, sound: true);
   }
 
-  NotificationDetails notificationsDetails() {
-    return const NotificationDetails(
-      android: AndroidNotificationDetails(
-        'daily_channel_id',
-        'Daily Notifications',
-        channelDescription: 'Daily Notification Channel',
-        importance: Importance.max,
-        priority: Priority.high,
-      ),
-      iOS: DarwinNotificationDetails(),
-    );
-  }
-
-  Future<void> showNotification({int? id, String? title, String? body}) async {
-    final uniqueId = id ?? await _generateNotificationId();
-    await notificationsPlugin.show(
-      uniqueId,
-      title,
-      body,
-      notificationsDetails(),
-    );
-  }
-
-  Future<void> scheduleNotification({
-    int? id,
+  Future<void> scheduleWeeklyNotifications({
     required String title,
     required String body,
     required int hour,
     required int minute,
+    required List<int> weekdays,
   }) async {
-    final uniqueId = id ?? await _generateNotificationId();
+    final androidDetails = AndroidNotificationDetails(
+      'medication_channel',
+      'Lembretes de Medicação',
+      channelDescription: 'Notificações recorrentes para tomar medicação',
+      importance: Importance.max,
+      priority: Priority.high,
+    );
 
+    final iosDetails = DarwinNotificationDetails();
+
+    final notificationDetails = NotificationDetails(
+      android: androidDetails,
+      iOS: iosDetails,
+    );
+
+    for (final weekday in weekdays) {
+      final scheduledDate = _nextInstanceOfWeekdayTime(weekday, hour, minute);
+      final id = scheduledDate.millisecondsSinceEpoch.remainder(100000);
+
+      await flutterLocalNotificationsPlugin.zonedSchedule(
+        id,
+        title,
+        body,
+        scheduledDate,
+        notificationDetails,
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
+      );
+    }
+  }
+
+  tz.TZDateTime _nextInstanceOfWeekdayTime(int weekday, int hour, int minute) {
     final now = tz.TZDateTime.now(tz.local);
-    var scheduledDate = tz.TZDateTime(
+
+    // Programe para o horário desejado no dia de hoje
+    var scheduled = tz.TZDateTime(
       tz.local,
       now.year,
       now.month,
@@ -87,37 +96,30 @@ class NotificationsService {
       minute,
     );
 
-    if (scheduledDate.isBefore(now)) {
-      scheduledDate = scheduledDate.add(Duration(days: 1));
+    // Se o horário de hoje já passou, programe para o mesmo dia da próxima semana
+    if (scheduled.isBefore(now)) {
+      // Calcule a diferença entre o weekday solicitado e o dia da semana atual
+      int daysToAdd = (weekday - now.weekday) % 7;
+      if (daysToAdd <= 0) {
+        // Se o weekday selecionado já passou, adiciona 7 dias para a próxima semana
+        daysToAdd += 7;
+      }
+      scheduled = scheduled.add(Duration(days: daysToAdd));
     }
 
-    await notificationsPlugin.zonedSchedule(
-      uniqueId,
-      title,
-      body,
-      scheduledDate,
-      notificationsDetails(),
-      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
-      matchDateTimeComponents: DateTimeComponents.time,
-    );
-  }
+    // Caso o horário de hoje ainda não tenha passado, então agendamos para o dia da semana correto nesta semana
+    while (scheduled.weekday != weekday) {
+      scheduled = scheduled.add(const Duration(days: 1));
+    }
 
-  Future<void> cancelNotificationById(int id) async {
-    await notificationsPlugin.cancel(id);
+    return scheduled;
   }
 
   Future<void> cancelAllNotifications() async {
-    await notificationsPlugin.cancelAll();
+    await flutterLocalNotificationsPlugin.cancelAll();
   }
 
-  Future<List<PendingNotificationRequest>> getScheduledNotifications() async {
-    return await notificationsPlugin.pendingNotificationRequests();
-  }
-
-  Future<int> _generateNotificationId() async {
-    final prefs = await SharedPreferences.getInstance();
-    _notificationIdCounter++;
-    await prefs.setInt(_prefsKey, _notificationIdCounter);
-    return _notificationIdCounter;
+  Future<List<PendingNotificationRequest>> loadNotifications() async {
+    return await flutterLocalNotificationsPlugin.pendingNotificationRequests();
   }
 }

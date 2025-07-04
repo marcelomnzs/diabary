@@ -16,7 +16,6 @@ class NotificationsProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get error => _error;
 
-  // Setters internos
   void _setLoading(bool value) {
     _isLoading = value;
     notifyListeners();
@@ -27,11 +26,10 @@ class NotificationsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // Carrega notificações agendadas
   Future<void> loadNotifications() async {
     try {
       _setLoading(true);
-      _notifications = await _notificationsService.getScheduledNotifications();
+      _notifications = await _notificationsService.loadNotifications();
     } catch (e) {
       _setError('Erro ao carregar notificações');
     } finally {
@@ -44,48 +42,36 @@ class NotificationsProvider with ChangeNotifier {
     required String body,
     required int hour,
     required int minute,
+    required List<int> weekdays,
   }) async {
     try {
       _setLoading(true);
-      await _notificationsService.scheduleNotification(
+      await _notificationsService.scheduleWeeklyNotifications(
         title: title,
         body: body,
         hour: hour,
         minute: minute,
+        weekdays: weekdays,
       );
       await loadNotifications();
     } catch (e) {
-      _setError('Erro ao agendar notificação');
+      _setError(e.toString());
     } finally {
       _setLoading(false);
     }
   }
 
-  Future<void> showNotification({
-    required String title,
-    required String body,
-  }) async {
-    try {
-      _setLoading(true);
-      await _notificationsService.showNotification(title: title, body: body);
-    } catch (e) {
-      _setError('Erro ao mostrar notificação');
-    } finally {
-      _setLoading(false);
-    }
-  }
-
-  Future<void> cancelNotificationById(int id) async {
-    try {
-      _setLoading(true);
-      await _notificationsService.cancelNotificationById(id);
-      await loadNotifications();
-    } catch (e) {
-      _setError('Erro ao cancelar notificação');
-    } finally {
-      _setLoading(false);
-    }
-  }
+  // Future<void> cancelNotificationById(int id) async {
+  //   try {
+  //     _setLoading(true);
+  //     await _notificationsService.cancelNotificationById(id);
+  //     await loadNotifications();
+  //   } catch (e) {
+  //     _setError('Erro ao cancelar notificação');
+  //   } finally {
+  //     _setLoading(false);
+  //   }
+  // }
 
   Future<void> cancelAllNotifications() async {
     try {

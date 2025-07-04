@@ -30,6 +30,7 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
   Widget build(BuildContext context) {
     final DateTime focusedDay = context.watch<CalendarProvider>().focusedDay;
     final medicationsProvider = context.watch<MedicationsProvider>();
+    final notifications = context.watch<NotificationsProvider>();
 
     if (medicationsProvider.isLoading) {
       return const Center(child: CircularProgressIndicator());
@@ -77,6 +78,17 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             SizedBox(height: 15),
+            // TODO: Retirar esse botão (colocado apenas para testes)
+            ElevatedButton(
+              onPressed: () async {
+                notifications.cancelAllNotifications();
+                notifications.clear();
+                medicationsProvider.deleteAllMedications();
+              },
+
+              child: const Text('Limpar notificações agendadas'),
+            ),
+            SizedBox(height: 10),
             Expanded(
               child: Consumer<NotificationsProvider>(
                 builder: (context, provider, _) {
@@ -87,7 +99,6 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
                       child: Text('Nenhuma notificação agendada.'),
                     );
                   }
-
                   return ListView.builder(
                     itemCount: notifications.length,
                     itemBuilder: (_, index) {
