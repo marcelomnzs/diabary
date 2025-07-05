@@ -15,6 +15,10 @@ class MedicationsService {
     await _repository.addMedication(userId, med);
   }
 
+  Future<void> updateMedication(String userId, MedicationModel med) async {
+    await _repository.updateMedication(userId, med);
+  }
+
   Future<void> deleteMedication(String userId, String medId) {
     return _repository.deleteMedication(userId, medId);
   }

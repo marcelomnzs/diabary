@@ -61,17 +61,31 @@ class NotificationsProvider with ChangeNotifier {
     }
   }
 
-  // Future<void> cancelNotificationById(int id) async {
-  //   try {
-  //     _setLoading(true);
-  //     await _notificationsService.cancelNotificationById(id);
-  //     await loadNotifications();
-  //   } catch (e) {
-  //     _setError('Erro ao cancelar notificação');
-  //   } finally {
-  //     _setLoading(false);
-  //   }
-  // }
+  Future<void> rescheduleNotification({
+    required String oldTitle,
+    required String newTitle,
+    required String body,
+    required int hour,
+    required int minute,
+    required List<int> weekdays,
+  }) async {
+    try {
+      _setLoading(true);
+      await _notificationsService.rescheduleNotification(
+        oldTitle: oldTitle,
+        newTitle: newTitle,
+        body: body,
+        hour: hour,
+        minute: minute,
+        weekdays: weekdays,
+      );
+      await loadNotifications();
+    } catch (e) {
+      _setError('Erro ao reagendar notificação');
+    } finally {
+      _setLoading(false);
+    }
+  }
 
   Future<void> cancelAllNotifications() async {
     try {

@@ -23,6 +23,13 @@ class MedicationsRepository {
     return doc.id;
   }
 
+  Future<void> updateMedication(String userId, MedicationModel med) async {
+    if (med.id == null || med.id!.isEmpty) {
+      throw ArgumentError('ID da medicação é obrigatório para atualização');
+    }
+    await _collection(userId).doc(med.id).update(med.toMap());
+  }
+
   Future<void> deleteMedication(String userId, String medId) async {
     final medRef = _collection(userId).doc(medId);
 

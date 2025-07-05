@@ -1,90 +1,112 @@
-import 'package:diabary/domain/models/medication_model.dart';
-import 'package:diabary/features/medications/presentation/providers/notifications_provider.dart';
-import 'package:diabary/features/medications/presentation/providers/week_days_provider.dart';
-import 'package:diabary/features/medications/presentation/providers/medications_provider.dart';
-import 'package:diabary/features/medications/presentation/widgets/week_day_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-final _formKey = GlobalKey<FormState>();
+import 'package:diabary/domain/models/medication_model.dart';
+import 'package:diabary/features/medications/presentation/providers/medications_provider.dart';
+import 'package:diabary/features/medications/presentation/providers/notifications_provider.dart';
+import 'package:diabary/features/medications/presentation/providers/week_days_provider.dart';
+import 'package:diabary/features/medications/presentation/widgets/week_day_picker.dart';
 
 class MedicationsForm extends StatefulWidget {
-  const MedicationsForm({super.key});
+  final MedicationModel? initialData;
+
+  const MedicationsForm({super.key, this.initialData});
 
   @override
   State<MedicationsForm> createState() => _MedicationsFormState();
 }
 
 class _MedicationsFormState extends State<MedicationsForm> {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _infoController = TextEditingController();
-
+  final _formKey = GlobalKey<FormState>();
+  final _nameCtrl = TextEditingController();
+  final _infoCtrl = TextEditingController();
   TimeOfDay _selectedTime = TimeOfDay.now();
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.initialData != null) {
+      final med = widget.initialData!;
+      _nameCtrl.text = med.nome;
+      _infoCtrl.text = med.notas;
+      _selectedTime = med.horario;
+
+      // Já deixa os dias da semana definidos
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        context.read<WeekDaysProvider>().setSelectedDays(med.diasSemana);
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _nameCtrl.dispose();
+    _infoCtrl.dispose();
+    super.dispose();
+  }
 
   Future<void> _pickTime() async {
     final picked = await showTimePicker(
       context: context,
       initialTime: _selectedTime,
     );
-    if (picked != null && picked != _selectedTime) {
-      setState(() {
-        _selectedTime = picked;
-      });
-    }
+    if (picked != null) setState(() => _selectedTime = picked);
   }
 
-  String _formatTimeOfDay(TimeOfDay time) {
-    final hour = time.hour.toString().padLeft(2, '0');
-    final minute = time.minute.toString().padLeft(2, '0');
-    return '$hour:$minute';
-  }
+  String _format(TimeOfDay t) =>
+      '${t.hour.toString().padLeft(2, '0')}:${t.minute.toString().padLeft(2, '0')}';
 
   @override
   Widget build(BuildContext context) {
+    final isEditing = widget.initialData != null;
     final notifications = context.watch<NotificationsProvider>();
+    final weekDaysProvider = context.read<WeekDaysProvider>();
+    final medicationsProvider = context.read<MedicationsProvider>();
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 32.0),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 32),
       child: Form(
         key: _formKey,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'Novo lembrete',
+              isEditing ? 'Editar lembrete' : 'Novo lembrete',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
-            const SizedBox(height: 23),
+            const SizedBox(height: 24),
+
             TextFormField(
+              controller: _nameCtrl,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
-                hintText: 'Ex: Metformina',
                 labelText: 'Nome da medicação',
+                hintText: 'Ex: Metformina',
               ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'O campo não pode estar vazio';
-                }
-                return null;
-              },
-              controller: _nameController,
+              validator:
+                  (v) =>
+                      (v == null || v.trim().isEmpty)
+                          ? 'O campo é obrigatório'
+                          : null,
             ),
             const SizedBox(height: 15),
+
             TextFormField(
+              controller: _infoCtrl,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
-                hintText: '850mg',
                 labelText: 'Informações adicionais',
+                hintText: '850 mg',
               ),
-              controller: _infoController,
             ),
             const SizedBox(height: 15),
-            // Botão para escolher horário
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Horário: ${_formatTimeOfDay(_selectedTime)}',
+                  'Horário: ${_format(_selectedTime)}',
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 ElevatedButton(
@@ -94,49 +116,19 @@ class _MedicationsFormState extends State<MedicationsForm> {
               ],
             ),
             const SizedBox(height: 20),
+
             const WeekDayPicker(),
-            const SizedBox(height: 15),
+            const SizedBox(height: 20),
+
             SizedBox(
               width: double.infinity,
               height: 50,
               child: ElevatedButton(
                 onPressed: () async {
-                  final formValid = _formKey.currentState!.validate();
-                  final selectedDaysInts =
-                      context
-                          .read<WeekDaysProvider>()
-                          .selectedDaysList
-                          .map((dayString) {
-                            switch (dayString) {
-                              case 'Segunda':
-                                return 1;
-                              case 'Terça':
-                                return 2;
-                              case 'Quarta':
-                                return 3;
-                              case 'Quinta':
-                                return 4;
-                              case 'Sexta':
-                                return 5;
-                              case 'Sábado':
-                                return 6;
-                              case 'Domingo':
-                                return 7;
-                              default:
-                                return 0;
-                            }
-                          })
-                          .where((v) => v != 0)
-                          .toList();
+                  if (!_formKey.currentState!.validate()) return;
 
-                  final weekDaysProvider = context.read<WeekDaysProvider>();
-                  final medicationsProvider =
-                      context.read<MedicationsProvider>();
-
-                  if (!formValid) return;
-
-                  // TODO: Alterar forma de visualizar o erro do form
-                  if (selectedDaysInts.isEmpty) {
+                  final selectedInts = weekDaysProvider.selectedDaysListInts;
+                  if (selectedInts.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text('Selecione pelo menos um dia da semana.'),
@@ -146,41 +138,54 @@ class _MedicationsFormState extends State<MedicationsForm> {
                     return;
                   }
 
-                  final medication = MedicationModel(
-                    id: '',
-                    nome: _nameController.text.trim(),
-                    notas: _infoController.text.trim(),
+                  final med = MedicationModel(
+                    id: isEditing ? widget.initialData!.id : '',
+                    nome: _nameCtrl.text.trim(),
+                    notas: _infoCtrl.text.trim(),
                     horario: _selectedTime,
-                    diasSemana: selectedDaysInts,
+                    diasSemana: selectedInts,
                   );
 
                   try {
-                    await medicationsProvider.addMedication(medication);
+                    if (isEditing) {
+                      medicationsProvider.updateMedication(med);
 
-                    await notifications.scheduleNotification(
-                      title: medication.nome,
-                      body: medication.notas,
-                      hour: _selectedTime.hour,
-                      minute: _selectedTime.minute,
-                      weekdays: selectedDaysInts,
-                    );
+                      await notifications.rescheduleNotification(
+                        oldTitle: widget.initialData!.nome,
+                        newTitle: med.nome,
+                        body: med.notas,
+                        hour: med.horario.hour,
+                        minute: med.horario.minute,
+                        weekdays: med.diasSemana,
+                      );
 
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Medicação criada')),
-                    );
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Medicação atualizada')),
+                      );
+                    } else {
+                      await medicationsProvider.addMedication(med);
 
-                    _nameController.clear();
-                    _infoController.clear();
+                      await notifications.scheduleNotification(
+                        title: med.nome,
+                        body: med.notas,
+                        hour: _selectedTime.hour,
+                        minute: _selectedTime.minute,
+                        weekdays: selectedInts,
+                      );
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Medicação criada')),
+                      );
+                    }
+
+                    _nameCtrl.clear();
+                    _infoCtrl.clear();
                     weekDaysProvider.clearSelection();
-
-                    Future.delayed(const Duration(milliseconds: 300), () {
-                      if (!mounted) return;
-                      Navigator.pop(context);
-                    });
+                    if (mounted) Navigator.pop(context);
                   } catch (e) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text('Erro ao salvar medicação: $e'),
+                        content: Text('Erro ao salvar: $e'),
                         backgroundColor: Colors.red,
                       ),
                     );
@@ -189,11 +194,11 @@ class _MedicationsFormState extends State<MedicationsForm> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Theme.of(context).colorScheme.primary,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
                 child: Text(
-                  'Criar medicação',
+                  isEditing ? 'Salvar alterações' : 'Criar medicação',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -202,12 +207,13 @@ class _MedicationsFormState extends State<MedicationsForm> {
                 ),
               ),
             ),
+
             const SizedBox(height: 8),
             GestureDetector(
               onTap: () {
-                _nameController.clear();
-                _infoController.clear();
-                context.read<WeekDaysProvider>().clearSelection();
+                _nameCtrl.clear();
+                _infoCtrl.clear();
+                weekDaysProvider.clearSelection();
                 Navigator.pop(context);
               },
               child: Text(

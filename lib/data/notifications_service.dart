@@ -122,4 +122,34 @@ class NotificationsService {
   Future<List<PendingNotificationRequest>> loadNotifications() async {
     return await flutterLocalNotificationsPlugin.pendingNotificationRequests();
   }
+
+  Future<void> _cancelNotificationsByTitle(String title) async {
+    final pending =
+        await flutterLocalNotificationsPlugin.pendingNotificationRequests();
+
+    for (final p in pending) {
+      if (p.title == title) {
+        await flutterLocalNotificationsPlugin.cancel(p.id);
+      }
+    }
+  }
+
+  Future<void> rescheduleNotification({
+    required String oldTitle,
+    required String newTitle,
+    required String body,
+    required int hour,
+    required int minute,
+    required List<int> weekdays,
+  }) async {
+    await _cancelNotificationsByTitle(oldTitle);
+
+    await scheduleWeeklyNotifications(
+      title: newTitle,
+      body: body,
+      hour: hour,
+      minute: minute,
+      weekdays: weekdays,
+    );
+  }
 }

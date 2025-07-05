@@ -3,6 +3,7 @@ import 'package:diabary/features/medications/presentation/providers/medications_
 import 'package:diabary/features/medications/presentation/providers/notifications_provider.dart';
 import 'package:diabary/features/medications/presentation/widgets/medications_calendar.dart';
 import 'package:diabary/features/medications/presentation/widgets/medications_form.dart';
+import 'package:diabary/features/medications/presentation/widgets/medications_list.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -30,13 +31,13 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
   Widget build(BuildContext context) {
     final DateTime focusedDay = context.watch<CalendarProvider>().focusedDay;
     final medicationsProvider = context.watch<MedicationsProvider>();
-    final notifications = context.watch<NotificationsProvider>();
 
     if (medicationsProvider.isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
 
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         foregroundColor: Theme.of(context).colorScheme.onInverseSurface,
         title: Text(
@@ -77,39 +78,22 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
               'Meus medicamentos',
               style: Theme.of(context).textTheme.headlineSmall,
             ),
-            SizedBox(height: 15),
-            // TODO: Retirar esse botão (colocado apenas para testes)
-            ElevatedButton(
-              onPressed: () async {
-                notifications.cancelAllNotifications();
-                notifications.clear();
-                medicationsProvider.deleteAllMedications();
-              },
+            // SizedBox(height: 15),
+            // // TODO: Retirar esse botão (colocado apenas para testes)
+            // ElevatedButton(
+            //   onPressed: () async {
+            //     notifications.cancelAllNotifications();
+            //     notifications.clear();
+            //     medicationsProvider.deleteAllMedications();
+            //   },
 
-              child: const Text('Limpar notificações agendadas'),
-            ),
+            //   child: const Text('Limpar notificações agendadas'),
+            // ),
             SizedBox(height: 10),
             Expanded(
-              child: Consumer<NotificationsProvider>(
-                builder: (context, provider, _) {
-                  final notifications = provider.notifications;
-
-                  if (notifications.isEmpty) {
-                    return const Center(
-                      child: Text('Nenhuma notificação agendada.'),
-                    );
-                  }
-                  return ListView.builder(
-                    itemCount: notifications.length,
-                    itemBuilder: (_, index) {
-                      final n = notifications[index];
-                      return ListTile(
-                        title: Text(n.title ?? 'Sem título'),
-                        subtitle: Text(n.body ?? 'Sem corpo'),
-                      );
-                    },
-                  );
-                },
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: MedicationsList(),
               ),
             ),
           ],
@@ -153,7 +137,7 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
         },
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
-        child: const Icon(Icons.add),
+        child: Icon(Icons.add),
       ),
     );
   }

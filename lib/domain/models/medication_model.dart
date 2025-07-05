@@ -53,7 +53,8 @@ class MedicationModel {
         hour: int.parse(timeParts[0]),
         minute: int.parse(timeParts[1]),
       ),
-      diasSemana: json['diasSemana'] ?? [],
+      diasSemana:
+          (json['diasSemana'] as List<dynamic>).map((e) => e as int).toList(),
     );
   }
 }

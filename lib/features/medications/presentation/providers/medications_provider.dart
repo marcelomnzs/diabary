@@ -44,7 +44,7 @@ class MedicationsProvider with ChangeNotifier {
       _medications = await _service.loadMedications(_userId!);
       notifyListeners();
     } catch (e) {
-      _setError("Erro ao carregar medicações");
+      _setError(e.toString());
     } finally {
       _setLoading(false);
     }
@@ -57,6 +57,16 @@ class MedicationsProvider with ChangeNotifier {
       await loadMedications();
     } catch (e) {
       _setError("Erro ao adicionar medicação");
+    }
+  }
+
+  Future<void> updateMedication(MedicationModel med) async {
+    if (_userId == null) return;
+    try {
+      await _service.updateMedication(_userId!, med);
+      await loadMedications();
+    } catch (e) {
+      _setError("Erro ao atualizar medicação");
     }
   }
 
