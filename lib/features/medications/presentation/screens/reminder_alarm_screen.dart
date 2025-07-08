@@ -70,6 +70,10 @@ class ReminderAlarmScreen extends StatelessWidget {
                 onDismissed: (direction) {
                   if (direction == DismissDirection.endToStart) {
                     // Esquerda: não tomou
+                    context.read<MedicationsProvider>().markAsNotTaken(
+                      medicationId,
+                      DateTime.now(),
+                    );
                     Navigator.of(context).pop();
                   } else if (direction == DismissDirection.startToEnd) {
                     // Direita: tomou
