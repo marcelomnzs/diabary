@@ -157,13 +157,16 @@ class _MedicationsFormState extends State<MedicationsForm> {
                         hour: med.horario.hour,
                         minute: med.horario.minute,
                         weekdays: med.diasSemana,
+                        medId: med.id!,
                       );
 
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Medicação atualizada')),
                       );
                     } else {
-                      await medicationsProvider.addMedication(med);
+                      final medId = await medicationsProvider.addMedication(
+                        med,
+                      );
 
                       await notifications.scheduleNotification(
                         title: med.nome,
@@ -171,6 +174,7 @@ class _MedicationsFormState extends State<MedicationsForm> {
                         hour: _selectedTime.hour,
                         minute: _selectedTime.minute,
                         weekdays: selectedInts,
+                        medId: medId!,
                       );
 
                       ScaffoldMessenger.of(context).showSnackBar(

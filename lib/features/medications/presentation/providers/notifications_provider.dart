@@ -43,6 +43,7 @@ class NotificationsProvider with ChangeNotifier {
     required int hour,
     required int minute,
     required List<int> weekdays,
+    required String medId,
   }) async {
     try {
       _setLoading(true);
@@ -52,6 +53,7 @@ class NotificationsProvider with ChangeNotifier {
         hour: hour,
         minute: minute,
         weekdays: weekdays,
+        medId: medId,
       );
       await loadNotifications();
     } catch (e) {
@@ -68,6 +70,7 @@ class NotificationsProvider with ChangeNotifier {
     required int hour,
     required int minute,
     required List<int> weekdays,
+    required String medId,
   }) async {
     try {
       _setLoading(true);
@@ -78,6 +81,7 @@ class NotificationsProvider with ChangeNotifier {
         hour: hour,
         minute: minute,
         weekdays: weekdays,
+        medId: medId,
       );
       await loadNotifications();
     } catch (e) {

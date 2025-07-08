@@ -1,3 +1,4 @@
+import 'package:diabary/core/routes/app_router.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -25,7 +26,19 @@ class NotificationsService {
       iOS: iosInitSettings,
     );
 
-    await flutterLocalNotificationsPlugin.initialize(initSettings);
+    await flutterLocalNotificationsPlugin.initialize(
+      initSettings,
+      onDidReceiveNotificationResponse: (NotificationResponse response) {
+        final payload = response.payload;
+
+        if (payload != null && payload.isNotEmpty) {
+          appRouter.pushNamed(
+            AppRoutes.alarm.name,
+            pathParameters: {'medId': payload},
+          );
+        }
+      },
+    );
 
     if (await Permission.notification.isDenied ||
         await Permission.notification.isPermanentlyDenied) {
@@ -46,6 +59,7 @@ class NotificationsService {
   }
 
   Future<void> scheduleWeeklyNotifications({
+    required String medId,
     required String title,
     required String body,
     required int hour,
@@ -79,6 +93,7 @@ class NotificationsService {
         notificationDetails,
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
+        payload: medId,
       );
     }
   }
@@ -141,6 +156,7 @@ class NotificationsService {
     required int hour,
     required int minute,
     required List<int> weekdays,
+    required String medId,
   }) async {
     await _cancelNotificationsByTitle(oldTitle);
 
@@ -150,6 +166,7 @@ class NotificationsService {
       hour: hour,
       minute: minute,
       weekdays: weekdays,
+      medId: medId,
     );
   }
 }

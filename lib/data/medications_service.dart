@@ -11,8 +11,8 @@ class MedicationsService {
     return _repository.fetchMedications(userId);
   }
 
-  Future<void> addMedication(String userId, MedicationModel med) async {
-    await _repository.addMedication(userId, med);
+  Future<String> addMedication(String userId, MedicationModel med) async {
+    return await _repository.addMedication(userId, med);
   }
 
   Future<void> updateMedication(String userId, MedicationModel med) async {

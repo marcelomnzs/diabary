@@ -5,12 +5,15 @@ import 'package:diabary/features/chatbot/presentation/screens/chatbot_screen.dar
 import 'package:diabary/features/home/presentation/screens/home_screen.dart';
 import 'package:diabary/features/meal_tracker/presentation/screens/meal_tracker_screen.dart';
 import 'package:diabary/features/medications/presentation/screens/medications_screen.dart';
+import 'package:diabary/features/medications/presentation/screens/reminder_alarm_screen.dart';
 import 'package:diabary/features/settings/presentation/screens/account_screen.dart';
 import 'package:diabary/features/settings/presentation/screens/change_password_screen.dart';
 import 'package:diabary/features/settings/presentation/screens/settings_screen.dart';
 import 'package:diabary/features/settings/presentation/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
+late GoRouter appRouter;
 
 enum AppRoutes {
   login,
@@ -23,6 +26,7 @@ enum AppRoutes {
   profilePage,
   changePassword,
   editAccount,
+  alarm,
 }
 
 bool _isPublicRoute(String route) {
@@ -114,6 +118,14 @@ GoRouter createRouter(AuthProvider authProvider) {
                 (context, state) => MaterialPage(child: EditAccountScreen()),
           ),
         ],
+      ),
+      GoRoute(
+        path: '/alarm/:medId',
+        name: AppRoutes.alarm.name,
+        builder: (context, state) {
+          final medId = state.pathParameters['medId']!;
+          return ReminderAlarmScreen(medicationId: medId);
+        },
       ),
     ],
   );

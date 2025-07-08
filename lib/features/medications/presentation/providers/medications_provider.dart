@@ -50,13 +50,15 @@ class MedicationsProvider with ChangeNotifier {
     }
   }
 
-  Future<void> addMedication(MedicationModel med) async {
-    if (_userId == null) return;
+  Future<String?> addMedication(MedicationModel med) async {
+    if (_userId == null) return null;
     try {
-      await _service.addMedication(_userId!, med);
+      final medId = await _service.addMedication(_userId!, med);
       await loadMedications();
+      return medId;
     } catch (e) {
       _setError("Erro ao adicionar medicação");
+      return null;
     }
   }
 

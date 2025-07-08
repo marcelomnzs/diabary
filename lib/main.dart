@@ -18,7 +18,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 
@@ -89,12 +88,10 @@ class MainApp extends StatefulWidget {
 }
 
 class _MainAppState extends State<MainApp> {
-  late final GoRouter _router;
-
   @override
   void initState() {
     super.initState();
-    _router = createRouter(context.read<AuthProvider>());
+    appRouter = createRouter(context.read<AuthProvider>());
   }
 
   @override
@@ -106,7 +103,7 @@ class _MainAppState extends State<MainApp> {
 
         return MaterialApp.router(
           debugShowCheckedModeBanner: false,
-          routerConfig: _router,
+          routerConfig: appRouter,
           theme: materialTheme.light(),
           darkTheme: materialTheme.dark(),
           themeMode: themeProvider.themeMode,
