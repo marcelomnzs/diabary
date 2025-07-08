@@ -56,7 +56,8 @@ class MedicationsRepository {
   ) async {
     final dateId = event.date.toIso8601String();
     await _collection(userId).doc(medId).collection('events').doc(dateId).set({
-      'tomou': event.wasTaken,
+      'wasTaken': event.wasTaken,
+      'date': event.date.toIso8601String(),
     });
   }
 
@@ -64,24 +65,35 @@ class MedicationsRepository {
     String userId,
     DateTime day,
   ) async {
-    final dayId = DateTime(day.year, day.month, day.day).toIso8601String();
-    final query = await _collection(userId).get();
+    final startOfDay = DateTime(day.year, day.month, day.day);
+    final endOfDay = DateTime(day.year, day.month, day.day, 23, 59, 59, 999);
 
+    final query = await _collection(userId).get();
     List<MedicationEventModel> events = [];
 
     for (final doc in query.docs) {
       final medId = doc.id;
-      final eventDoc =
-          await _collection(
-            userId,
-          ).doc(medId).collection('events').doc(dayId).get();
 
-      if (eventDoc.exists) {
+      final eventsSnapshot =
+          await _collection(userId)
+              .doc(medId)
+              .collection('events')
+              .where(
+                'date',
+                isGreaterThanOrEqualTo: startOfDay.toIso8601String(),
+              )
+              .where('date', isLessThanOrEqualTo: endOfDay.toIso8601String())
+              .get();
+
+      for (final eventDoc in eventsSnapshot.docs) {
+        final data = eventDoc.data();
+        final eventDate = DateTime.parse(data['date']);
+
         events.add(
           MedicationEventModel.fromMap({
-            ...eventDoc.data()!,
+            ...data,
             'medicationId': medId,
-            'date': dayId,
+            'date': eventDate.toIso8601String(),
           }),
         );
       }

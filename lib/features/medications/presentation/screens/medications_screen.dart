@@ -78,17 +78,6 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
               'Meus medicamentos',
               style: Theme.of(context).textTheme.headlineSmall,
             ),
-            // SizedBox(height: 15),
-            // // TODO: Retirar esse botão (colocado apenas para testes)
-            // ElevatedButton(
-            //   onPressed: () async {
-            //     notifications.cancelAllNotifications();
-            //     notifications.clear();
-            //     medicationsProvider.deleteAllMedications();
-            //   },
-
-            //   child: const Text('Limpar notificações agendadas'),
-            // ),
             SizedBox(height: 10),
             Expanded(
               child: Padding(
