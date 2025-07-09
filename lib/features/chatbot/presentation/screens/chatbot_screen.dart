@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../pegar_rota.dart';
+import '../../pegar_rota.dart'; // Importe o serviço (ajuste o caminho se necessário)
 
 class ChatbotScreen extends StatefulWidget {
   const ChatbotScreen({super.key});
@@ -9,92 +9,83 @@ class ChatbotScreen extends StatefulWidget {
 }
 
 class _ChatbotScreenState extends State<ChatbotScreen> {
-  final TextEditingController controller = TextEditingController();
-  final List<Map<String, String>> messages =
-      []; // {'role': 'user'/'bot', 'text': ...}
+  final NutricionistaService _service = NutricionistaService();
+  final TextEditingController _controller = TextEditingController();
+  final List<Map<String, String>> _messages = [];
 
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  void _talkToChatbot() async {
-    final userMessage = controller.text.trim();
+  Future<void> _talkToChatbot() async {
+    final userMessage = _controller.text.trim();
     if (userMessage.isEmpty) return;
 
     setState(() {
-      messages.add({'role': 'user', 'text': userMessage});
-      controller.clear();
+      _messages.add({'role': 'user', 'text': userMessage});
+      _controller.clear();
     });
 
-    final botResponse = await getOpenRouterResponse(userMessage);
+    try {
+      final botResponse = await _service.enviarMensagem(userMessage);
 
-    setState(() {
-      messages.add({'role': 'bot', 'text': botResponse});
-    });
+      setState(() {
+        _messages.add({'role': 'bot', 'text': botResponse});
+      });
+    } catch (e) {
+      setState(() {
+        _messages.add({
+          'role': 'bot',
+          'text': 'Erro ao conectar com a API: $e',
+        });
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Chatbot')),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: messages.length,
-              itemBuilder: (context, index) {
-                final msg = messages[index];
-                final isUser = msg['role'] == 'user';
-                return Align(
-                  alignment:
-                      isUser ? Alignment.centerRight : Alignment.centerLeft,
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(vertical: 4),
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: isUser ? Colors.blue[100] : Colors.grey[300],
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      msg['text'] ?? '',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight:
-                            isUser ? FontWeight.bold : FontWeight.normal,
+      appBar: AppBar(title: const Text('Chatbot Nutricionista')),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                itemCount: _messages.length,
+                itemBuilder: (context, index) {
+                  final msg = _messages[index];
+                  final isUser = msg['role'] == 'user';
+                  return Align(
+                    alignment:
+                        isUser ? Alignment.centerRight : Alignment.centerLeft,
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(vertical: 4),
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: isUser ? Colors.blue[100] : Colors.grey[200],
+                        borderRadius: BorderRadius.circular(8),
                       ),
+                      child: Text(msg['text'] ?? ''),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: Row(
+            Row(
               children: [
                 Expanded(
                   child: TextField(
-                    controller: controller,
+                    controller: _controller,
                     decoration: const InputDecoration(
-                      hintText: 'Digite sua mensagem...',
-                      border: OutlineInputBorder(),
+                      labelText: 'Digite sua mensagem',
                     ),
-                    onSubmitted: (_) => _talkToChatbot(),
                   ),
                 ),
-                const SizedBox(width: 8),
-                FloatingActionButton(
-                  mini: true,
+                IconButton(
+                  icon: const Icon(Icons.send),
                   onPressed: _talkToChatbot,
-                  child: const Icon(Icons.send),
                 ),
               ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

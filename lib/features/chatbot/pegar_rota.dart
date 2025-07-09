@@ -1,36 +1,33 @@
 import 'dart:convert';
-// import 'package:diabary/features/chatbot/api.key.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
-Future<String> getOpenRouterResponse(String pergunta) async {
-  var apiKey = dotenv.env['API_CHATBOT'] ?? '';
-  const endpoint = 'https://api.groq.com/openai/v1/chat/completions';
+class NutricionistaService {
+  static const String baseUrl = 'http://192.168.0.8:8000';
 
-  final headers = {
-    'Authorization': 'Bearer $apiKey',
-    'Content-Type': 'application/json',
-  };
-  final body = jsonEncode({
-    'model': 'llama-3.3-70b-versatile',
-    'messages': [
-      {'role': 'user', 'content': pergunta},
-    ],
-    'temperature': 0.1,
-  });
+  Future<String> enviarMensagem(String mensagem) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/conversa'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'mensagem': mensagem}),
+      );
 
-  final response = await http.post(
-    Uri.parse(endpoint),
-    headers: headers,
-    body: body,
-  );
-
-  if (response.statusCode == 200) {
-    final data = jsonDecode(response.body);
-    return data['choices'][0]['message']['content'];
-  } else {
-    throw Exception(
-      'Failed to load response: ${response.statusCode}\n${response.body}',
-    );
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return data['resposta'] ?? 'Sem resposta do agente.';
+      } else {
+        throw Exception('Falha ao enviar mensagem: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Erro na conexão: $e');
+    }
   }
+}
+
+void main() async {
+  final service = NutricionistaService();
+  final resposta = await service.enviarMensagem(
+    'Olá, preciso de um plano alimentar no almoço.',
+  );
+  print(resposta);
 }
