@@ -6,6 +6,7 @@ import 'package:diabary/features/home/presentation/screens/home_screen.dart';
 import 'package:diabary/features/meal_tracker/presentation/screens/meal_tracker_screen.dart';
 import 'package:diabary/features/medications/presentation/screens/medications_screen.dart';
 import 'package:diabary/features/medications/presentation/screens/reminder_alarm_screen.dart';
+import 'package:diabary/features/onboarding/presentation/screens/onboarding_screen.dart';
 import 'package:diabary/features/settings/presentation/screens/account_screen.dart';
 import 'package:diabary/features/settings/presentation/screens/change_password_screen.dart';
 import 'package:diabary/features/settings/presentation/screens/settings_screen.dart';
@@ -26,6 +27,7 @@ enum AppRoutes {
   profilePage,
   changePassword,
   editAccount,
+  onboarding,
   alarm,
 }
 
@@ -41,12 +43,21 @@ GoRouter createRouter(AuthProvider authProvider) {
     redirect: (context, state) {
       final isLoggedIn = authProvider.isAuthenticated;
       final currentRoute = state.uri.path;
+      final completedOnboarding = authProvider.onboardingCompleted;
 
       if (!isLoggedIn && !_isPublicRoute(currentRoute)) {
         return '/login';
       }
 
       if (isLoggedIn && _isPublicRoute(currentRoute)) {
+        return '/home';
+      }
+
+      if (isLoggedIn && !completedOnboarding && currentRoute != '/onboarding') {
+        return '/onboarding';
+      }
+
+      if (isLoggedIn && completedOnboarding && currentRoute == '/onboarding') {
         return '/home';
       }
 
@@ -119,6 +130,12 @@ GoRouter createRouter(AuthProvider authProvider) {
           ),
         ],
       ),
+      GoRoute(
+        path: '/onboarding',
+        name: AppRoutes.onboarding.name,
+        builder: (context, state) => const OnboardingFlow(),
+      ),
+
       GoRoute(
         path: '/alarm/:medId',
         name: AppRoutes.alarm.name,

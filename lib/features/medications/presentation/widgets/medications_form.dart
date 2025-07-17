@@ -185,7 +185,7 @@ class _MedicationsFormState extends State<MedicationsForm> {
                     _nameCtrl.clear();
                     _infoCtrl.clear();
                     weekDaysProvider.clearSelection();
-                    if (mounted) Navigator.pop(context);
+                    if (mounted) Navigator.pop(context, true);
                   } catch (e) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(

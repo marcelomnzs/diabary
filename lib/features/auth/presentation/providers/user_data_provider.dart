@@ -46,6 +46,7 @@ class UserDataProvider with ChangeNotifier {
     try {
       await _userRepository.saveUser(user);
       _userData = user;
+      loadUserData(user.id);
     } catch (e) {
       _setError('Erro ao salvar dados do usuário');
     } finally {

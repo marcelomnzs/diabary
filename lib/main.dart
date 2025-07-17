@@ -13,6 +13,7 @@ import 'package:diabary/features/medications/presentation/providers/calendar_pro
 import 'package:diabary/features/medications/presentation/providers/medications_provider.dart';
 import 'package:diabary/features/medications/presentation/providers/notifications_provider.dart';
 import 'package:diabary/features/medications/presentation/providers/week_days_provider.dart';
+import 'package:diabary/features/onboarding/presentation/providers/onboarding_provider.dart';
 import 'package:diabary/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -67,6 +68,9 @@ Future<void> main() async {
         ),
         ChangeNotifierProvider<UserDataProvider>(
           create: (_) => UserDataProvider(userRepository),
+        ),
+        ChangeNotifierProvider<OnboardingProvider>(
+          create: (_) => OnboardingProvider(),
         ),
         ChangeNotifierProvider<CalendarProvider>(
           create: (_) => CalendarProvider(),

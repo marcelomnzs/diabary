@@ -49,10 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(
-                          left: 8.0,
-                          top: 8.0,
-                        ), // Espaçamento apenas à esquerda e no topo
+                        padding: const EdgeInsets.only(left: 8.0, top: 8.0),
                         child: Text(
                           'Olá, ${user?.name ?? 'Usuário'}',
                           style: Theme.of(context).textTheme.displaySmall,

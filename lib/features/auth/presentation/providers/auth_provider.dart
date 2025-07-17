@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:diabary/data/auth_service.dart';
+import 'package:diabary/domain/models/user_model.dart';
 import 'package:diabary/domain/repositories/user_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -11,13 +12,21 @@ class AuthProvider with ChangeNotifier {
   User? _user;
   bool _isLoading = false;
   String? _error;
+  bool _onboardingCompleted = false;
+  UserModel? _userData;
 
   AuthProvider(this._authService, this._userRepository) {
     // Monitora alguma mudança na autenticação
-    _authService.authStateChanges.listen((user) async{
+    _authService.authStateChanges.listen((user) async {
       _user = user;
 
-      if(user != null) await _userRepository.createUserDocIfNotExists(user);
+      if (user != null) {
+        await _userRepository.createUserDocIfNotExists(user);
+        final userModel = await _userRepository.getUserById(user.uid);
+        _onboardingCompleted = userModel?.onboardingCompleted == true;
+      } else {
+        _onboardingCompleted = false;
+      }
       notifyListeners();
     });
   }
@@ -27,6 +36,8 @@ class AuthProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get error => _error;
   bool get isAuthenticated => _user != null;
+  bool get onboardingCompleted => _onboardingCompleted;
+  UserModel? get userData => _userData;
 
   // Setters
   void setError(String? error) {
@@ -36,6 +47,11 @@ class AuthProvider with ChangeNotifier {
 
   void _setLoading(bool value) {
     _isLoading = value;
+    notifyListeners();
+  }
+
+  void setOnboardingCompleted(bool value) {
+    _onboardingCompleted = value;
     notifyListeners();
   }
 
@@ -125,6 +141,22 @@ class AuthProvider with ChangeNotifier {
     } finally {
       _setLoading(false);
     }
+  }
+
+  Future<void> completeOnboarding() async {
+    if (_user == null) return;
+
+    await _userRepository.saveUser(
+      UserModel(
+        id: _user!.uid,
+        email: _user!.email!,
+        name: _user!.displayName ?? '',
+        onboardingCompleted: true,
+      ),
+    );
+
+    _onboardingCompleted = true;
+    notifyListeners();
   }
 
   String _parseFirebaseError(String code) {
