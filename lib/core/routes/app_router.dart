@@ -1,3 +1,4 @@
+import 'package:diabary/core/widgets/splash_screen.dart';
 import 'package:diabary/features/auth/presentation/providers/auth_provider.dart';
 import 'package:diabary/features/auth/presentation/screens/login_screen.dart';
 import 'package:diabary/features/auth/presentation/screens/register_screen.dart';
@@ -17,6 +18,7 @@ import 'package:go_router/go_router.dart';
 late GoRouter appRouter;
 
 enum AppRoutes {
+  splash,
   login,
   signup,
   chatbot,
@@ -38,11 +40,16 @@ bool _isPublicRoute(String route) {
 
 GoRouter createRouter(AuthProvider authProvider) {
   return GoRouter(
-    initialLocation: '/login',
+    initialLocation: '/splash',
     refreshListenable: authProvider,
     redirect: (context, state) {
-      final isLoggedIn = authProvider.isAuthenticated;
       final currentRoute = state.uri.path;
+
+      if (authProvider.isLoading) {
+        return '/splash';
+      }
+
+      final isLoggedIn = authProvider.isAuthenticated;
       final completedOnboarding = authProvider.onboardingCompleted;
 
       if (!isLoggedIn && !_isPublicRoute(currentRoute)) {
@@ -66,9 +73,9 @@ GoRouter createRouter(AuthProvider authProvider) {
 
     routes: [
       GoRoute(
-        path: '/home',
-        name: AppRoutes.home.name,
-        builder: (context, state) => const HomeScreen(),
+        path: '/splash',
+        name: AppRoutes.splash.name,
+        builder: (context, state) => const SplashScreen(),
       ),
       GoRoute(
         path: '/login',
@@ -81,6 +88,21 @@ GoRouter createRouter(AuthProvider authProvider) {
         builder: (context, state) => const RegisterScreen(),
       ),
       GoRoute(
+        path: '/home',
+        name: AppRoutes.home.name,
+        builder: (context, state) => const HomeScreen(),
+      ),
+      GoRoute(
+        path: '/chatbot',
+        name: AppRoutes.chatbot.name,
+        builder: (context, state) => ChatbotScreen(),
+      ),
+      GoRoute(
+        path: '/mealTracker',
+        name: AppRoutes.mealTracker.name,
+        builder: (context, state) => MealTrackerScreen(),
+      ),
+      GoRoute(
         path: '/medications',
         name: AppRoutes.medications.name,
         pageBuilder:
@@ -89,31 +111,15 @@ GoRouter createRouter(AuthProvider authProvider) {
               child: MedicationsScreen(),
             ),
       ),
-
-      GoRoute(
-        path: '/chatbot',
-        name: AppRoutes.chatbot.name,
-        builder: (context, state) => ChatbotScreen(),
-      ),
-
-      GoRoute(
-        path: '/mealTracker',
-        name: AppRoutes.mealTracker.name,
-        builder: (context, state) => MealTrackerScreen(),
-      ),
-
       GoRoute(
         path: '/profile',
         name: AppRoutes.profilePage.name,
         builder: (context, state) => ProfileScreen(),
       ),
-
       GoRoute(
         path: '/settings',
         name: AppRoutes.settings.name,
         builder: (context, state) => SettingsScreen(),
-
-        // Sub-rotas
         routes: [
           GoRoute(
             path: 'change-password',
@@ -121,7 +127,6 @@ GoRouter createRouter(AuthProvider authProvider) {
             pageBuilder:
                 (context, state) => MaterialPage(child: ChangePasswordScreen()),
           ),
-
           GoRoute(
             path: 'edit-account',
             name: AppRoutes.editAccount.name,
@@ -135,7 +140,6 @@ GoRouter createRouter(AuthProvider authProvider) {
         name: AppRoutes.onboarding.name,
         builder: (context, state) => const OnboardingFlow(),
       ),
-
       GoRoute(
         path: '/alarm/:medId',
         name: AppRoutes.alarm.name,

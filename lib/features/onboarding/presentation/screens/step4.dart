@@ -4,6 +4,7 @@ import 'package:diabary/features/auth/presentation/providers/auth_provider.dart'
 import 'package:diabary/features/auth/presentation/providers/user_data_provider.dart';
 import 'package:diabary/features/onboarding/presentation/providers/onboarding_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 class OnboardingStep4 extends StatefulWidget {
@@ -40,6 +41,7 @@ class _OnboardingStep4State extends State<OnboardingStep4> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            SvgPicture.asset('assets/svg/step2.svg', height: 230),
             const Text(
               'Você possui alguma outra condição médica?',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -76,7 +78,6 @@ class _OnboardingStep4State extends State<OnboardingStep4> {
             ),
             const SizedBox(height: 20),
 
-            // TextField aparece apenas se SIM for selecionado
             if (_hasCondition)
               TextField(
                 controller: _controller,

@@ -78,17 +78,6 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future<void> signOut() async {
-    try {
-      _setLoading(true);
-      await _authService.signOut();
-    } on FirebaseAuthException catch (exception) {
-      _error = _parseFirebaseError(exception.code);
-    } finally {
-      _setLoading(false);
-    }
-  }
-
   Future<void> resetPassword(String email) async {
     try {
       _setLoading(true);
@@ -104,7 +93,7 @@ class AuthProvider with ChangeNotifier {
     try {
       _setLoading(true);
       await _authService.updateUsername(username: username);
-      await _authService.currentUser?.reload(); // <-- Força recarregar os dados
+      await _authService.currentUser?.reload();
       _user = _authService.currentUser;
     } on FirebaseAuthException catch (exception) {
       _error = _parseFirebaseError(exception.code);
@@ -136,6 +125,23 @@ class AuthProvider with ChangeNotifier {
         newPassword: newPassword,
         email: email,
       );
+    } on FirebaseAuthException catch (exception) {
+      _error = _parseFirebaseError(exception.code);
+    } finally {
+      _setLoading(false);
+    }
+  }
+
+  Future<void> signOut() async {
+    try {
+      _setLoading(true);
+
+      await _authService.signOut();
+
+      _user = null;
+      _userData = null;
+
+      notifyListeners();
     } on FirebaseAuthException catch (exception) {
       _error = _parseFirebaseError(exception.code);
     } finally {

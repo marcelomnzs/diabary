@@ -28,5 +28,3 @@ class OnboardingFlow extends StatelessWidget {
     }
   }
 }
-
-class OnboardingStep5 {}
