@@ -100,7 +100,7 @@ GoRouter createRouter(AuthProvider authProvider) {
       GoRoute(
         path: '/mealTracker',
         name: AppRoutes.mealTracker.name,
-        builder: (context, state) => MealTrackerScreen(),
+        builder: (context, state) => MealTracker(),
       ),
       GoRoute(
         path: '/medications',

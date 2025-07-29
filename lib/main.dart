@@ -9,6 +9,8 @@ import 'package:diabary/domain/repositories/user_repository.dart';
 import 'package:diabary/domain/repositories/medications_repository.dart';
 import 'package:diabary/features/auth/presentation/providers/auth_provider.dart';
 import 'package:diabary/features/auth/presentation/providers/user_data_provider.dart';
+import 'package:diabary/features/meal_tracker/presentation/providers/meal_provider.dart';
+import 'package:diabary/features/meal_tracker/presentation/providers/search_provider.dart';
 import 'package:diabary/features/medications/presentation/providers/calendar_provider.dart';
 import 'package:diabary/features/medications/presentation/providers/medications_provider.dart';
 import 'package:diabary/features/medications/presentation/providers/notifications_provider.dart';
@@ -53,9 +55,7 @@ Future<void> main() async {
         ),
         ChangeNotifierProvider<NotificationsProvider>(
           create:
-              (_) =>
-                  NotificationsProvider(notificationsService)
-                    ..loadNotifications(),
+              (_) => NotificationsProvider(notificationsService)..loadNotifications(),
         ),
         ChangeNotifierProvider<ThemeProvider>(create: (_) => ThemeProvider()),
         ChangeNotifierProxyProvider<AuthProvider, MedicationsProvider>(
@@ -78,6 +78,15 @@ Future<void> main() async {
         ChangeNotifierProvider<WeekDaysProvider>(
           create: (_) => WeekDaysProvider(),
         ),
+        ChangeNotifierProxyProvider<AuthProvider, MealProvider>(
+          create: (_) => MealProvider(),
+          update: (context, authProvider, mealProvider) {
+            mealProvider ??= MealProvider();
+            mealProvider.setUserId(authProvider.user?.uid);
+            return mealProvider;
+          },
+        ),
+        ChangeNotifierProvider<SearchProvider>(create: (_) => SearchProvider()),
       ],
       child: const MainApp(),
     ),
