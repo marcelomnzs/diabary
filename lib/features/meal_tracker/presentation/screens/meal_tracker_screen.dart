@@ -4,6 +4,7 @@ import 'package:diabary/features/meal_tracker/presentation/providers/meal_provid
 import 'package:diabary/features/meal_tracker/presentation/providers/search_provider.dart';
 import 'package:diabary/features/meal_tracker/presentation/widgets/carousel_selector.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class MealTracker extends StatefulWidget {
@@ -164,6 +165,42 @@ class _MealTrackerState extends State<MealTracker> {
                           ],
                         ),
                       ),
+                    if (mealProvider.mealItems.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: 16,
+                          right: 16,
+                          top: 16,
+                        ),
+                        child: SizedBox(
+                          width: double.infinity,
+                          height: 50,
+                          child: ElevatedButton.icon(
+                            onPressed: () async {
+                              final picker = ImagePicker();
+                              final image = await picker.pickImage(
+                                source: ImageSource.camera,
+                              );
+                              if (image != null) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      "Foto registrada com sucesso!",
+                                    ),
+                                  ),
+                                );
+                                // Salvar imagem no banco de dados
+                              }
+                            },
+                            icon: const Icon(Icons.camera_alt),
+                            label: const Text("Tirar foto do prato"),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.orange,
+                            ),
+                          ),
+                        ),
+                      ),
+
                     Padding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 16,
@@ -181,6 +218,7 @@ class _MealTrackerState extends State<MealTracker> {
                                       items: mealProvider.mealItems,
                                       category: mealProvider.selectedMealLabel,
                                       date: DateTime.now(),
+                                      photoBase64: mealProvider.mealPhotoBase64,
                                     );
 
                                     await mealProvider.saveMeal(meal);

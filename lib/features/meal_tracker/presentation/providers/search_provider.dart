@@ -7,8 +7,14 @@ class SearchProvider extends ChangeNotifier {
   final TextEditingController searchController = TextEditingController();
   List<FoodItem> suggestions = [];
   bool isLoading = false;
+  String? _error;
 
   get results => null;
+  get error => _error;
+
+  void setError(String error) {
+    _error = error;
+  }
 
   Future<void> fetchSuggestions(String query) async {
     if (query.isEmpty) {
@@ -33,6 +39,8 @@ class SearchProvider extends ChangeNotifier {
         suggestions = [];
       }
     } catch (e) {
+      debugPrint(e.toString());
+      setError(e.toString());
       suggestions = [];
     } finally {
       isLoading = false;
