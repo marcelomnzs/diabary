@@ -1,6 +1,7 @@
 import 'package:diabary/core/routes/app_router.dart';
 import 'package:diabary/features/auth/presentation/providers/auth_provider.dart';
 import 'package:diabary/features/auth/presentation/providers/user_data_provider.dart';
+import 'package:diabary/features/medications/presentation/providers/notifications_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -13,8 +14,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex = 0; // Índice do botão selecionado
-
   @override
   void initState() {
     super.initState();
@@ -33,6 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final userDataProvider = context.watch<UserDataProvider>();
+    final notificationProvider = context.watch<NotificationsProvider>();
     final user = userDataProvider.userData;
 
     return Scaffold(
@@ -153,10 +153,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Text(
                             'Monte seu prato',
                             style: TextStyle(
-                              color:
-                                  Theme.of(context)
-                                      .colorScheme
-                                      .onSurface, // Cor de destaque para o valor promocional
+                              color: Theme.of(context).colorScheme.onSurface,
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
                             ),
@@ -187,10 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Text(
                             'Minhas métricas',
                             style: TextStyle(
-                              color:
-                                  Theme.of(context)
-                                      .colorScheme
-                                      .onSurface, // Cor de destaque para o valor promocional
+                              color: Theme.of(context).colorScheme.onSurface,
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
                             ),
@@ -224,10 +218,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Text(
                             'Medicamentos',
                             style: TextStyle(
-                              color:
-                                  Theme.of(context)
-                                      .colorScheme
-                                      .onSurface, // Cor de destaque para o valor promocional
+                              color: Theme.of(context).colorScheme.onSurface,
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
                             ),
@@ -260,10 +251,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Text(
                             'Assistente de IA',
                             style: TextStyle(
-                              color:
-                                  Theme.of(context)
-                                      .colorScheme
-                                      .onSurface, // Cor de destaque para o valor promocional
+                              color: Theme.of(context).colorScheme.onSurface,
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
                             ),
@@ -276,177 +264,184 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
 
               SizedBox(height: 40),
-              // Espaçamento entre os botões e o texto
               Container(
-                width: 450,
-                height: 200,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30),
                   color: Theme.of(context).colorScheme.surfaceTint,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.4),
+                      color: Colors.black.withValues(alpha: 0.4),
                       spreadRadius: 5,
                       blurRadius: 7,
-                      offset: Offset(0, 3), // Sombra na parte inferior
+                      offset: Offset(0, 3),
                     ),
                   ],
                 ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+
+                child: Column(
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    Stack(
                       children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Assine já o plano premium',
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.surface,
-                                fontSize: 25,
-                                fontWeight: FontWeight.bold,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 30,
+                            vertical: 16,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Assine já o \nplano premium',
+                                style: TextStyle(
+                                  color: Theme.of(context).colorScheme.surface,
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'R\$ 49,99',
-                                  style: TextStyle(
-                                    color: Colors.white.withOpacity(0.5),
-                                    decoration: TextDecoration.lineThrough,
-                                    decorationColor: Colors.white.withOpacity(
-                                      0.5,
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'R\$ 49,99',
+                                    style: TextStyle(
+                                      color: Colors.white.withValues(
+                                        alpha: 0.5,
+                                      ),
+                                      decoration: TextDecoration.lineThrough,
+                                      decorationColor: Colors.white.withValues(
+                                        alpha: 0.5,
+                                      ),
                                     ),
                                   ),
-                                ),
 
-                                SizedBox(width: 5),
-                                Text(
-                                  'R\$ 39,99', // Novo valor ao lado
-                                  style: TextStyle(
-                                    color:
-                                        Theme.of(context)
-                                            .colorScheme
-                                            .surface, // Cor de destaque para o valor promocional
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
+                                  SizedBox(width: 10),
+                                  Text(
+                                    'R\$ 39,99',
+                                    style: TextStyle(
+                                      color:
+                                          Theme.of(context).colorScheme.surface,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ],
+                              ),
+
+                              SizedBox(height: 15),
+
+                              ElevatedButton(
+                                onPressed: () {},
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                      Theme.of(context).colorScheme.primary,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
                                   ),
                                 ),
-                              ],
-                            ),
-
-                            ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    Theme.of(context).colorScheme.primary,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8.0),
+                                child: Text(
+                                  'Assine já',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color:
+                                        Theme.of(context).colorScheme.onPrimary,
+                                  ),
                                 ),
                               ),
-
+                            ],
+                          ),
+                        ),
+                        Positioned(
+                          left: 319,
+                          bottom: 150,
+                          child: Container(
+                            width: 95,
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(20),
+                              ),
+                              color:
+                                  Theme.of(
+                                    context,
+                                  ).colorScheme.tertiaryContainer,
+                            ),
+                            child: Center(
                               child: Text(
-                                'Assine já',
+                                '50% off',
                                 style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
                                   color:
-                                      Theme.of(context).colorScheme.onPrimary,
+                                      Theme.of(
+                                        context,
+                                      ).colorScheme.onTertiaryContainer,
                                 ),
                               ),
                             ),
-                          ],
+                          ),
                         ),
 
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Container(
-                              width: 60,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color:
-                                    Theme.of(
-                                      context,
-                                    ).colorScheme.tertiaryContainer,
-                              ),
-
-                              child: Center(
-                                child: Text(
-                                  '50% off',
-                                  style: TextStyle(
-                                    color:
-                                        Theme.of(
-                                          context,
-                                        ).colorScheme.onTertiaryContainer,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
+                        Positioned(
+                          left: 245,
+                          top: 40,
+                          child: Image.asset(
+                            'assets/images/premium.png',
+                            height: 115,
+                            width: 115,
+                          ),
                         ),
                       ],
                     ),
                   ],
                 ),
               ),
-
-              SizedBox(height: 20),
+              SizedBox(height: 30),
 
               Container(
-                width: 450,
-                height: 50,
+                padding: EdgeInsets.all(4),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: Theme.of(context).colorScheme.surfaceContainerLowest,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.22),
+                      color: Colors.black.withValues(alpha: 0.12),
                       spreadRadius: 5,
                       blurRadius: 7,
-                      offset: Offset(0, 3), // Sombra na parte inferior
+                      offset: Offset(0, 3),
                     ),
                   ],
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    Row(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(16.0),
                           child: Icon(
                             Icons.alarm,
-                            size: 30,
+                            size: 32,
                             color: Theme.of(context).colorScheme.primary,
                           ),
                         ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Próxima Medicação',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Próxima Medicação:',
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
+                              if (notificationProvider.notifications.isNotEmpty)
+                                Text(
+                                  '${notificationProvider.notifications[1].title} - ${notificationProvider.notifications[1].body}',
+                                )
+                              else
+                                Text('Nenhuma medicação para hoje!'),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                     IconButton(
                       icon: Icon(
@@ -486,10 +481,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: Theme.of(context).colorScheme.surfaceTint,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.22),
+                      color: Colors.black.withValues(alpha: 0.22),
                       spreadRadius: 5,
                       blurRadius: 7,
-                      offset: Offset(0, 3), // Sombra na parte inferior
+                      offset: Offset(0, 3),
                     ),
                   ],
                 ),
@@ -522,26 +517,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
-      ),
-
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.white,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_month),
-            label: 'Configurações',
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Sobre'),
-        ],
-        currentIndex: _selectedIndex, // Define o índice selecionado
-        selectedItemColor: Colors.blue, // Cor do item selecionado
-        unselectedItemColor: Colors.grey, // Cor dos itens não selecionados
-        onTap: (int index) {
-          setState(() {
-            _selectedIndex = index; // Atualiza o índice selecionado
-          });
-        },
       ),
     );
   }

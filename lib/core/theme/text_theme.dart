@@ -28,7 +28,7 @@ TextTheme createTextTheme(
       fontWeight: FontWeight.w700,
     ),
     titleMedium: displayTextTheme.titleMedium?.copyWith(
-      fontWeight: FontWeight.w600,
+      fontWeight: FontWeight.w700,
     ),
     titleSmall: displayTextTheme.titleSmall?.copyWith(
       fontWeight: FontWeight.w500,
