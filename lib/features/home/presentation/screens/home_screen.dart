@@ -52,15 +52,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         padding: const EdgeInsets.only(left: 8.0, top: 8.0),
                         child: Text(
                           'Olá, ${user?.name ?? 'Usuário'}',
-                          style: Theme.of(context).textTheme.displaySmall,
+                          style: Theme.of(context).textTheme.displaySmall
+                              ?.copyWith(fontWeight: FontWeight.w600),
                         ),
                       ),
 
                       Padding(
-                        padding: const EdgeInsets.only(
-                          left: 8.0,
-                          top: 8.0,
-                        ), // Espaçamento consistente
+                        padding: const EdgeInsets.only(left: 8.0, top: 8.0),
                         child: Text(
                           'Como você se sente hoje?',
                           style: Theme.of(context).textTheme.bodyLarge,
@@ -81,9 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
 
                             child: IconButton(
-                              onPressed: () {
-                                // Ação ao pressionar o botão
-                              },
+                              onPressed: () {},
                               icon: Icon(
                                 Icons.notifications,
                                 color: Theme.of(context).colorScheme.onPrimary,
@@ -127,7 +123,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    // Centraliza os botões
                     children: [
                       Column(
                         children: [
@@ -177,7 +172,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   () =>
                                       context.pushNamed(AppRoutes.metrics.name),
                               icon: Icon(
-                                Icons.food_bank,
+                                Icons.bar_chart,
                                 color: Theme.of(context).colorScheme.surface,
                               ),
                               iconSize: 20.0,
@@ -211,7 +206,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     AppRoutes.medications.name,
                                   ),
                               icon: Icon(
-                                Icons.food_bank,
+                                Icons.medication,
                                 color: Theme.of(context).colorScheme.surface,
                               ),
                               iconSize: 20.0,
@@ -244,7 +239,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   () =>
                                       context.pushNamed(AppRoutes.chatbot.name),
                               icon: Icon(
-                                Icons.food_bank,
+                                Icons.smart_toy,
                                 color: Theme.of(context).colorScheme.surface,
                               ),
                               iconSize: 20.0,
@@ -436,7 +431,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               if (notificationProvider.notifications.isNotEmpty)
                                 Text(
-                                  '${notificationProvider.notifications[1].title} - ${notificationProvider.notifications[1].body}',
+                                  '${notificationProvider.notifications.first.title} - ${notificationProvider.notifications.first.body}',
                                 )
                               else
                                 Text('Nenhuma medicação para hoje!'),

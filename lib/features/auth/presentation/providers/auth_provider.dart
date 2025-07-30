@@ -61,7 +61,7 @@ class AuthProvider with ChangeNotifier {
       _setLoading(true);
       await _authService.signIn(email: email, password: password);
     } on FirebaseAuthException catch (exception) {
-      _error = _parseFirebaseError(exception.code);
+      setError(_parseFirebaseError(exception.code));
     } finally {
       _setLoading(false);
     }

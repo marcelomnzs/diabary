@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class NutricionistaService {
-  static const String baseUrl = 'http://192.168.0.8:8000';
-
+  static const String baseUrl = 'http://10.34.96.151:8000';
+ 
   Future<String> enviarMensagem(String mensagem) async {
     try {
       final response = await http.post(

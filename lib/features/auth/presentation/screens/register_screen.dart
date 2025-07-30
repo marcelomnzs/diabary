@@ -45,10 +45,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         Center(
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(10.0),
-                            child: const SizedBox(width: 150, height: 150),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.healing_rounded, size: 65),
+                                Text(
+                                  'Diabary',
+                                  style: TextStyle(
+                                    fontSize: 42,
+                                    fontWeight: FontWeight.w900,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                        const SizedBox(height: 20),
+
+                        const SizedBox(height: 30),
                         TextField(
                           controller: _nameController,
                           decoration: const InputDecoration(
@@ -226,7 +241,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 30),
+                        SizedBox(height: 30),
+                        if (authProvider.error != null)
+                          Padding(
+                            padding: EdgeInsets.only(bottom: 12),
+                            child: Text(
+                              authProvider.error!,
+                              style: const TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+
+                        SizedBox(height: 5),
                         SizedBox(
                           width: double.infinity,
                           height: 50,
