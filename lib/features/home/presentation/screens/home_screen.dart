@@ -173,7 +173,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               color: Theme.of(context).colorScheme.surfaceTint,
                             ),
                             child: IconButton(
-                              onPressed: () {},
+                              onPressed:
+                                  () =>
+                                      context.pushNamed(AppRoutes.metrics.name),
                               icon: Icon(
                                 Icons.food_bank,
                                 color: Theme.of(context).colorScheme.surface,

@@ -5,6 +5,7 @@ import 'package:diabary/features/auth/presentation/screens/register_screen.dart'
 import 'package:diabary/features/chatbot/presentation/screens/chatbot_screen.dart';
 import 'package:diabary/features/home/presentation/screens/home_screen.dart';
 import 'package:diabary/features/meal_tracker/presentation/screens/meal_tracker_screen.dart';
+import 'package:diabary/features/meal_tracker/presentation/screens/metrics_screen.dart';
 import 'package:diabary/features/medications/presentation/screens/medications_screen.dart';
 import 'package:diabary/features/medications/presentation/screens/reminder_alarm_screen.dart';
 import 'package:diabary/features/onboarding/presentation/screens/onboarding_screen.dart';
@@ -31,6 +32,7 @@ enum AppRoutes {
   editAccount,
   onboarding,
   alarm,
+  metrics,
 }
 
 bool _isPublicRoute(String route) {
@@ -101,6 +103,11 @@ GoRouter createRouter(AuthProvider authProvider) {
         path: '/mealTracker',
         name: AppRoutes.mealTracker.name,
         builder: (context, state) => MealTracker(),
+      ),
+      GoRoute(
+        path: '/metrics',
+        name: AppRoutes.metrics.name,
+        builder: (context, state) => Metrics(),
       ),
       GoRoute(
         path: '/medications',

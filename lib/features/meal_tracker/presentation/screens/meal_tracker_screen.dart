@@ -181,6 +181,9 @@ class _MealTrackerState extends State<MealTracker> {
                               final image = await picker.pickImage(
                                 source: ImageSource.camera,
                               );
+
+                              mealProvider.setMealPhoto(image);
+
                               if (image != null) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(

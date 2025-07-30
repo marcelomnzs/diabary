@@ -17,7 +17,9 @@ class MealRepository {
 
   Future<List<Meal>> getMeals(String userId) async {
     final snapshot =
-        await _userMealsCollection(userId).orderBy('category').get();
+        await _userMealsCollection(
+          userId,
+        ).orderBy('date', descending: true).get();
 
     return snapshot.docs
         .map((doc) => Meal.fromMap(doc.data(), doc.id))
